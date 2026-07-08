@@ -30,7 +30,7 @@ function Splash() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-full min-h-screen sm:min-h-[860px] overflow-hidden bg-black">
+      <div className="relative h-full min-h-screen sm:min-h-[860px] overflow-hidden bg-[#0A0E27]">
         <video
           className="absolute inset-0 h-full w-full object-contain object-center"
           autoPlay
