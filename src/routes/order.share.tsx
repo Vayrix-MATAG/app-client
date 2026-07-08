@@ -8,7 +8,6 @@ import type { RideOrder } from "@/lib/types";
 import { Users, Clock, PiggyBank } from "lucide-react";
 
 export const Route = createFileRoute("/order/share")({
-  head: () => ({ meta: [{ title: "Partage de course — Vayrix" }] }),
   component: SharePage,
 });
 

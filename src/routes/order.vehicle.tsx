@@ -9,7 +9,6 @@ import type { VehicleType } from "@/lib/types";
 import { Bike, Car, Crown } from "lucide-react";
 
 export const Route = createFileRoute("/order/vehicle")({
-  head: () => ({ meta: [{ title: "Choisir véhicule — Vayrix" }] }),
   component: VehiclePage,
 });
 

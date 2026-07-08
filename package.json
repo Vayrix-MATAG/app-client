@@ -9,6 +9,7 @@
     "build": "node ./node_modules/vite/bin/vite.js build",
     "build:dev": "node ./node_modules/vite/bin/vite.js build --mode development",
     "preview": "node ./node_modules/vite/bin/vite.js preview",
+    "serve": "npx serve dist",
     "lint": "node ./node_modules/eslint/bin/eslint.js .",
     "format": "node ./node_modules/prettier/bin/prettier.cjs --write ."
   },

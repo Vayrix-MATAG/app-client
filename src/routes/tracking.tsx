@@ -7,7 +7,6 @@ import { useApp } from "@/contexts/AppProvider";
 import { ArrowLeft, Phone, MessageCircle, X } from "lucide-react";
 
 export const Route = createFileRoute("/tracking")({
-  head: () => ({ meta: [{ title: "Chauffeur en route — Vayrix" }] }),
   component: Tracking,
 });
 

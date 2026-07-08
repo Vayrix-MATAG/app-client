@@ -7,7 +7,6 @@ import { useApp } from "@/contexts/AppProvider";
 import { ArrowLeft, Car } from "lucide-react";
 
 export const Route = createFileRoute("/booking")({
-  head: () => ({ meta: [{ title: "Recherche chauffeur — Vayrix" }] }),
   component: Booking,
 });
 

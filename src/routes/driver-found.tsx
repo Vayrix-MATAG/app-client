@@ -6,7 +6,6 @@ import { useApp } from "@/contexts/AppProvider";
 import { ArrowLeft, Star, Phone, MessageCircle } from "lucide-react";
 
 export const Route = createFileRoute("/driver-found")({
-  head: () => ({ meta: [{ title: "Chauffeur trouvé — Vayrix" }] }),
   component: DriverFound,
 });
 

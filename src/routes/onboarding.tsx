@@ -3,10 +3,9 @@ import { useRef, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Field, PrimaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
-import { Camera, User, Phone, Home, Briefcase } from "lucide-react";
+import { Camera, User, Phone, Hop as Home, Briefcase } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding")({
-  head: () => ({ meta: [{ title: "Configuration — Vayrix" }] }),
   component: Onboarding,
 });
 

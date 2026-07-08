@@ -13,7 +13,6 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/completed")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Course terminée — Vayrix" }] }),
   component: Completed,
 });
 

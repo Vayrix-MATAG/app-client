@@ -5,10 +5,9 @@ import { StatusBar } from "@/components/StatusBar";
 import { MapBg } from "@/components/MapBg";
 import { SecurityRecordingBadge } from "@/components/SecurityMode";
 import { useApp } from "@/contexts/AppProvider";
-import { ArrowLeft, Phone, MessageCircle, Share2, AlertTriangle, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Phone, MessageCircle, Share2, TriangleAlert as AlertTriangle, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/ride")({
-  head: () => ({ meta: [{ title: "Course en cours — Vayrix" }] }),
   component: RideActive,
 });
 

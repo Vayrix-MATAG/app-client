@@ -5,7 +5,6 @@ import { formatPrice, vehicleLabel, useApp } from "@/contexts/AppProvider";
 import { Download, MapPin, CreditCard, Star } from "lucide-react";
 
 export const Route = createFileRoute("/history/$rideId")({
-  head: () => ({ meta: [{ title: "Détail course — Vayrix" }] }),
   component: RideDetail,
 });
 

@@ -4,10 +4,9 @@ import { AppShell } from "@/components/AppShell";
 import { SecurityModeToggle } from "@/components/SecurityMode";
 import { Field, PrimaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
-import { Home, Briefcase, Plus, CreditCard, Bell, Shield, LogOut, ChevronRight, Camera, User, Phone } from "lucide-react";
+import { Hop as Home, Briefcase, Plus, CreditCard, Bell, Shield, LogOut, ChevronRight, Camera, User, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "Profil — Vayrix" }] }),
   component: Profile,
 });
 

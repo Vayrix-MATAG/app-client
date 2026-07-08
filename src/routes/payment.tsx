@@ -7,7 +7,6 @@ import { formatPrice, useApp } from "@/contexts/AppProvider";
 import { Banknote, Smartphone, Check } from "lucide-react";
 
 export const Route = createFileRoute("/payment")({
-  head: () => ({ meta: [{ title: "Paiement — Vayrix" }] }),
   component: Payment,
 });
 

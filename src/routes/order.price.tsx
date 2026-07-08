@@ -7,7 +7,6 @@ import { formatPrice, useApp } from "@/contexts/AppProvider";
 import { Check, Tag } from "lucide-react";
 
 export const Route = createFileRoute("/order/price")({
-  head: () => ({ meta: [{ title: "Prix — Vayrix" }] }),
   component: PricePage,
 });
 

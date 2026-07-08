@@ -7,7 +7,6 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { useApp } from "@/contexts/AppProvider";
 
 export const Route = createFileRoute("/auth/otp")({
-  head: () => ({ meta: [{ title: "Vérification OTP — Vayrix" }] }),
   component: OtpPage,
 });
 

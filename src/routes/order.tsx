@@ -8,7 +8,6 @@ import { useApp } from "@/contexts/AppProvider";
 import { MapPin, Navigation } from "lucide-react";
 
 export const Route = createFileRoute("/order")({
-  head: () => ({ meta: [{ title: "Commander — Vayrix" }] }),
   component: OrderPage,
 });
 

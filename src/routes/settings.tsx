@@ -11,7 +11,6 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/settings")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Paramètres — Vayrix" }] }),
   component: Settings,
 });
 

@@ -8,7 +8,6 @@ import { useApp } from "@/contexts/AppProvider";
 import { Mail, Lock, Eye, EyeOff, User, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Connexion — Vayrix" }] }),
   component: Auth,
 });
 

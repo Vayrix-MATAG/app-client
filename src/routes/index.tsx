@@ -4,12 +4,6 @@ import { PhoneFrame } from "@/components/PhoneFrame";
 import { loadState } from "@/lib/app-store";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Vayrix — Move smarter" },
-      { name: "description", content: "Vayrix premium ride-hailing app." },
-    ],
-  }),
   component: Splash,
 });
 

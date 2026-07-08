@@ -4,7 +4,6 @@ import { formatPrice, useApp } from "@/contexts/AppProvider";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/history")({
-  head: () => ({ meta: [{ title: "Historique — Vayrix" }] }),
   component: History,
 });
 
