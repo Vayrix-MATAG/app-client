@@ -7,7 +7,8 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [
     TanStackRouterVite({
-      autoCodeSplitRoutes: true,
+      routesDirectory: "./src/routes",
+      generatedRouteTree: "./src/routeTree.gen.ts",
     }),
     viteReact(),
     tsConfigPaths({
@@ -18,5 +19,10 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
 });
