@@ -30,20 +30,23 @@ function Splash() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-full min-h-screen sm:min-h-[860px] overflow-hidden bg-[#0A0E27]">
-        <video
-          className="absolute inset-0 h-full w-full object-contain object-center"
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          onEnded={goNext}
-          onError={goNext}
+      <div className="relative h-full min-h-screen sm:min-h-[860px] overflow-hidden bg-[#0A0E27] flex flex-col items-center justify-center">
+        <div
+          className="relative z-10 flex items-center justify-center w-full"
+          style={{ background: "#0A0E27" }}
         >
-          <source src="/splash-h264.mp4" type="video/mp4" />
-        </video>
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+          <video
+            className="w-full max-w-[320px] aspect-square object-contain object-center"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            onEnded={goNext}
+            onError={goNext}
+          >
+            <source src="/splash-h264.mp4" type="video/mp4" />
+          </video>
+        </div>
 
         <p className="absolute bottom-14 left-0 right-0 text-center text-xs text-white/50 z-10 animate-pulse">
           Vérification de la connexion…
