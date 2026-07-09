@@ -45,12 +45,13 @@ function Home() {
   return (
     <AppShell>
       <div className="relative">
-        <div className="h-44 relative overflow-hidden">
+        {/* <div className="h-44 relative overflow-hidden">
           <MapBg showGps gpsLabel="Position GPS actuelle" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0E27]" />
-        </div>
+        </div> */}
 
-        <div className="px-5 -mt-4 pb-6 space-y-4 relative z-10">
+        {/* <div className="px-5 -mt-4 pb-6 space-y-4 relative z-10"> */}
+        <div className="px-5 pt-6 pb-6 space-y-4 relative z-10">
           <header className="flex items-center justify-between animate-float-up">
             <div className="flex items-center gap-3">
               <div className="h-11 w-11 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold shadow-glow overflow-hidden">
@@ -101,7 +102,7 @@ function Home() {
             </button>
           </section>
 
-          <div className="grid grid-cols-2 gap-2 animate-float-up [animation-delay:100ms]">
+          {/* <div className="grid grid-cols-2 gap-2 animate-float-up [animation-delay:100ms]">
             <QuickLink
               icon={<CreditCard className="h-4 w-4" />}
               label="Paiement"
@@ -122,7 +123,7 @@ function Home() {
               label="Historique"
               onClick={() => navigate({ to: "/history" })}
             />
-          </div>
+          </div> */}
 
           <section className="space-y-3 animate-float-up [animation-delay:140ms]">
             <div className="flex items-center justify-between">
