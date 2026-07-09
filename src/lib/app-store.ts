@@ -179,31 +179,11 @@ function getDefaultLoyaltyHistory(): LoyaltyEntry[] {
 }
 
 export function loadState(): AppState {
-  if (typeof window === "undefined") return createEmptyState();
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return createEmptyState();
-    const parsed = JSON.parse(raw) as Partial<AppState> & { _version?: number };
-    // Wipe stale state when schema version changes
-    if ((parsed._version ?? 0) < STATE_VERSION) {
-      localStorage.removeItem(STORAGE_KEY);
-      return createEmptyState();
-    }
-    const base = createEmptyState();
-    return {
-      ...base,
-      ...parsed,
-      notificationPrefs: { ...base.notificationPrefs, ...parsed.notificationPrefs },
-      loyalty: { ...base.loyalty, ...parsed.loyalty },
-    };
-  } catch {
-    return createEmptyState();
-  }
+  return createEmptyState();
 }
 
 export function saveState(state: AppState): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, _version: STATE_VERSION }));
+  // Persistence disabled: app state resets on refresh to reflect current UI changes.
 }
 
 export function estimateRide(

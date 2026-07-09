@@ -13,10 +13,8 @@ type Filter = "all" | "completed" | "cancelled" | "shared";
 
 const FILTERS: { key: Filter; label: string }[] = [
   { key: "all", label: "Toutes" },
-  { key: "completed", label: "Années" },
-  { key: "cancelled", label: "Mois" },
+  { key: "completed", label: "Mois" },
   { key: "cancelled", label: "Semaines" },
-  { key: "shared", label: "Jour" },
 ];
 
 function History() {

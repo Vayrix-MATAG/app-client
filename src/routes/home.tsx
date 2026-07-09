@@ -63,19 +63,7 @@ function Home() {
             <SecurityModeToggle compact />
           </div>
 
-          {/* <Link
-            to="/loyalty"
-            className="block rounded-2xl bg-gradient-to-r from-[#1a2348] to-[#141B3D] border border-[#7B5CFF]/30 p-4 flex items-center gap-3 animate-float-up [animation-delay:50ms] hover:border-[#7B5CFF]/60 transition"
-          >
-            <div className="h-10 w-10 rounded-xl bg-[#7B5CFF]/20 flex items-center justify-center">
-              <Gift className="h-5 w-5 text-[#7B5CFF]" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold">Fidélité — Palier {tierLabel}</p>
-              <p className="text-xs text-[#B8BED6]">{loyalty.points.toLocaleString("fr-FR")} points</p>
-            </div>
-            <ArrowRight className="h-4 w-4 text-[#B8BED6]" />
-          </Link> */}
+          
 
           <section className="rounded-2xl bg-[#141B3D] border border-white/5 p-4 shadow-card animate-float-up [animation-delay:60ms]">
             <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-3">Où allez-vous ?</h2>
@@ -154,6 +142,20 @@ function Home() {
               })}
             </div>
           </section>
+            <h3 className="text-sm font-semibold">Fidélité</h3>
+          <Link
+            to="/loyalty"
+            className="block rounded-2xl bg-gradient-to-r from-[#1a2348] to-[#141B3D] border border-[#7B5CFF]/30 p-4 flex items-center gap-3 animate-float-up [animation-delay:50ms] hover:border-[#7B5CFF]/60 transition"
+          >
+            <div className="h-10 w-10 rounded-xl bg-[#7B5CFF]/20 flex items-center justify-center">
+              <Gift className="h-5 w-5 text-[#7B5CFF]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">Fidélité — Palier {tierLabel}</p>
+              <p className="text-xs text-[#B8BED6]">{loyalty.points.toLocaleString("fr-FR")} points</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[#B8BED6]" />
+          </Link>
         </div>
       </div>
     </AppShell>
