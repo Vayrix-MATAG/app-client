@@ -16,7 +16,7 @@ import type {
 } from "./types";
 
 const STORAGE_KEY = "vayrix_app_state";
-const STATE_VERSION = 3; // increment when AppState shape changes
+const STATE_VERSION = 4; // increment when AppState shape changes
 
 const DEFAULT_DRIVER: Driver = {
   name: "Eric T.",
@@ -95,6 +95,7 @@ export function createEmptyState(): AppState {
     },
     language: "fr",
     negotiation: null,
+    userLocation: null,
   };
 }
 

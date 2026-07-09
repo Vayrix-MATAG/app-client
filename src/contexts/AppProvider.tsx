@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { toast } from "sonner";
 import {
   addMessage,
   addNotification,
@@ -92,6 +93,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const persist = useCallback((updater: (s: AppState) => AppState) => {
     setState((s) => updater(s));
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !navigator?.geolocation) {
+      toast.error("Géolocalisation non supportée par ce navigateur.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        persist((s) => ({
+          ...s,
+          userLocation: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date(position.timestamp).toISOString(),
+          },
+        }));
+      },
+      () => {
+        toast.error("Impossible de localiser votre position. Activez le GPS et autorisez la localisation.");
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+    );
+  }, [persist]);
 
   const value = useMemo<AppContextValue>(
     () => {

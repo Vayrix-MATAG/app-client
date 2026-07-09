@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { MapBg } from "@/components/MapBg";
 import { Field, PrimaryButton, ScreenHeader } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
+import { resolveLocationCoordinates } from "@/lib/location";
 import { MapPin, Navigation } from "lucide-react";
 
 export const Route = createFileRoute("/order")({
@@ -13,9 +13,10 @@ export const Route = createFileRoute("/order")({
 
 function OrderPage() {
   const navigate = useNavigate();
-  const { pendingOrder, updatePendingOrder } = useApp();
+  const { pendingOrder, updatePendingOrder, userLocation } = useApp();
   const [departure, setDeparture] = useState(pendingOrder?.departure || "Essos, Yaoundé");
   const [destination, setDestination] = useState(pendingOrder?.destination || "");
+  const destinationCoords = resolveLocationCoordinates(destination, userLocation ?? undefined);
 
   function handleContinue() {
     if (!destination.trim()) return;
@@ -26,8 +27,12 @@ function OrderPage() {
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-0 flex flex-col">
-        <MapBg showGps />
-        {/* <StatusBar /> */}
+        <MapBg
+          showGps
+          origin={userLocation ?? undefined}
+          destination={destinationCoords ?? undefined}
+          destinationQuery={destination}
+        />
         <div className="relative z-10 flex-1 flex flex-col bg-gradient-to-t from-[#0A0E27] via-[#0A0E27]/95 to-transparent">
           <ScreenHeader title="Commander une course" onBack={() => navigate({ to: "/home" })} />
           <div className="flex-1 px-5 space-y-4">
@@ -49,7 +54,7 @@ function OrderPage() {
           </div>
           <div className="p-5">
             <PrimaryButton onClick={handleContinue} disabled={!destination.trim()}>
-              Calculer l'estimation
+              Commander une course
             </PrimaryButton>
           </div>
         </div>

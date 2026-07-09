@@ -175,4 +175,10 @@ export interface AppState {
   notificationPrefs: NotificationPrefs;
   language: AppLanguage;
   negotiation: NegotiationOffer | null;
+  userLocation: {
+    latitude: number;
+    longitude: number;
+    accuracy?: number;
+    timestamp?: string;
+  } | null;
 }
