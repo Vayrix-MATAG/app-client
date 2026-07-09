@@ -1,11 +1,19 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { MapBg } from "@/components/MapBg";
 import { SecurityRecordingBadge } from "@/components/SecurityMode";
 import { useApp } from "@/contexts/AppProvider";
-import { ArrowLeft, Phone, MessageCircle, Share2, TriangleAlert as AlertTriangle, ShieldAlert } from "lucide-react";
+import { toast } from "sonner";
+import {
+  ArrowLeft,
+  Phone,
+  MessageCircle,
+  Share2,
+  TriangleAlert as AlertTriangle,
+  ShieldAlert,
+  PhoneCall,
+} from "lucide-react";
 
 export const Route = createFileRoute("/ride")({
   component: RideActive,
@@ -13,14 +21,19 @@ export const Route = createFileRoute("/ride")({
 
 function RideActive() {
   const navigate = useNavigate();
-  const { currentRide, updateCurrentRide, securityModeEnabled } = useApp();
+  const { currentRide, updateCurrentRide, securityModeEnabled, user } = useApp();
   const [remainingKm, setRemainingKm] = useState(currentRide?.order.distance || 5);
   const [remainingMin, setRemainingMin] = useState(currentRide?.order.duration || 12);
   const [dangerAlert, setDangerAlert] = useState(false);
+  const [sosOpen, setSosOpen] = useState(false);
   const [sosSent, setSosSent] = useState(false);
+  const [sosHoldProgress, setSosHoldProgress] = useState(0);
+  const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const driver = currentRide?.driver;
   const order = currentRide?.order;
   const recording = currentRide?.securityRecording || securityModeEnabled;
+  const emergencyContacts = user?.emergencyContacts || [];
 
   useEffect(() => {
     const i = setInterval(() => {
@@ -50,9 +63,34 @@ function RideActive() {
     }
   }, [remainingKm, remainingMin, navigate, updateCurrentRide]);
 
-  function handleSos() {
+  function startHold() {
+    if (sosSent) return;
+    setSosHoldProgress(0);
+    holdTimer.current = setInterval(() => {
+      setSosHoldProgress((p) => {
+        if (p >= 100) {
+          if (holdTimer.current) clearInterval(holdTimer.current);
+          triggerSos();
+          return 100;
+        }
+        return p + 100 / 30;
+      });
+    }, 100);
+  }
+
+  function cancelHold() {
+    if (holdTimer.current) clearInterval(holdTimer.current);
+    setSosHoldProgress(0);
+  }
+
+  function triggerSos() {
+    setSosOpen(false);
     setSosSent(true);
+    setSosHoldProgress(0);
     updateCurrentRide({ sosTriggered: true });
+    toast.error("SOS envoyé", {
+      description: "Position, ID course et infos transmises à l'administration.",
+    });
   }
 
   if (!driver || !order) {
@@ -64,7 +102,6 @@ function RideActive() {
     <PhoneFrame>
       <div className="relative h-full min-h-screen sm:min-h-[860px]">
         <MapBg withCar showGps gpsLabel="GPS renforcé" />
-        {/* <StatusBar /> */}
 
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between gap-2">
           <button
@@ -89,7 +126,7 @@ function RideActive() {
           <div className="absolute top-36 left-4 right-4 rounded-2xl bg-red-500/20 border border-red-500/40 p-4 animate-float-up z-20">
             <div className="flex items-start gap-3">
               <ShieldAlert className="h-5 w-5 text-red-400 shrink-0" />
-              <div>
+              <div className="flex-1">
                 <p className="text-sm font-bold text-red-300">Danger détecté par l'IA</p>
                 <p className="text-xs text-[#B8BED6] mt-1">
                   Analyse : « Au secours » — Score : <strong className="text-red-300">92%</strong>
@@ -97,6 +134,22 @@ function RideActive() {
                 <p className="text-xs text-red-300/80 mt-1">
                   Alerte envoyée à l'administration (GPS, client, chauffeur, course)
                 </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={() => setSosOpen(true)}
+                    className="flex-1 h-9 rounded-lg bg-red-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5"
+                  >
+                    <AlertTriangle className="h-3.5 w-3.5" /> SOS
+                  </button>
+                  {emergencyContacts[0] && (
+                    <a
+                      href={`tel:${emergencyContacts[0].phone.replace(/\s/g, "")}`}
+                      className="flex-1 h-9 rounded-lg bg-[#0A0E27] border border-white/10 text-white text-xs font-semibold flex items-center justify-center gap-1.5"
+                    >
+                      <PhoneCall className="h-3.5 w-3.5" /> Appeler {emergencyContacts[0].name.split(" ")[0]}
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -130,11 +183,11 @@ function RideActive() {
           </div>
 
           <div className="grid grid-cols-4 gap-2">
-            <MiniBtn icon={<Phone className="h-4 w-4" />} label="Appeler" />
-            <MiniBtn icon={<MessageCircle className="h-4 w-4" />} label="Message" />
-            <MiniBtn icon={<Share2 className="h-4 w-4" />} label="Partager position" />
+            <MiniBtn icon={<Phone className="h-4 w-4" />} label="Appeler" href={`tel:${driver.phone.replace(/\s/g, "")}`} />
+            <MiniBtn icon={<MessageCircle className="h-4 w-4" />} label="Message" onClick={() => navigate({ to: "/messages" })} />
+            <MiniBtn icon={<Share2 className="h-4 w-4" />} label="Partager" onClick={() => navigate({ to: "/share-live" })} />
             <button
-              onClick={handleSos}
+              onClick={() => setSosOpen(true)}
               disabled={sosSent}
               className="h-14 rounded-xl flex flex-col items-center justify-center gap-0.5 bg-red-600 border border-red-500 text-white disabled:opacity-60"
             >
@@ -147,14 +200,91 @@ function RideActive() {
             L'IA travaille en arrière-plan · Fin de course par le chauffeur
           </p>
         </div>
+
+        {sosOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center">
+            <div
+              className="absolute inset-0 bg-red-950/80 backdrop-blur-sm"
+              onClick={() => cancelHold()}
+            />
+            <div className="relative mx-6 max-w-sm w-full rounded-3xl bg-[#141B3D] border border-red-500/40 p-6 text-center animate-float-up">
+              <div className="mx-auto h-16 w-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+                <ShieldAlert className="h-8 w-8 text-red-400" />
+              </div>
+              <h2 className="text-lg font-bold text-red-300">Confirmer l'alerte SOS</h2>
+              <p className="mt-2 text-sm text-[#B8BED6]">
+                Votre position, l'ID de course et vos informations seront envoyés à l'administration.
+                {emergencyContacts.length > 0 && " Vos contacts d'urgence seront notifiés."}
+              </p>
+
+              {emergencyContacts.length > 0 && (
+                <div className="mt-3 text-left">
+                  <p className="text-[11px] uppercase tracking-wider text-[#B8BED6] mb-1">Contacts notifiés</p>
+                  <div className="space-y-1">
+                    {emergencyContacts.map((c) => (
+                      <div key={c.id} className="text-xs text-white flex items-center gap-2">
+                        <PhoneCall className="h-3 w-3 text-[#B8BED6]" /> {c.name} — {c.phone}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <button
+                onMouseDown={startHold}
+                onMouseUp={cancelHold}
+                onMouseLeave={cancelHold}
+                onTouchStart={startHold}
+                onTouchEnd={cancelHold}
+                className="relative mt-5 w-full h-14 rounded-2xl bg-red-600 border border-red-400 text-white font-bold overflow-hidden select-none"
+              >
+                <div
+                  className="absolute inset-y-0 left-0 bg-red-400/40 transition-all"
+                  style={{ width: `${sosHoldProgress}%` }}
+                />
+                <span className="relative">
+                  {sosHoldProgress > 0 ? "Maintenez…" : "Maintenir 3 s pour confirmer"}
+                </span>
+              </button>
+              <button
+                onClick={() => {
+                  cancelHold();
+                  setSosOpen(false);
+                }}
+                className="mt-3 w-full text-sm text-[#B8BED6] hover:text-white"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </PhoneFrame>
   );
 }
 
-function MiniBtn({ icon, label }: { icon: React.ReactNode; label: string }) {
+function MiniBtn({
+  icon,
+  label,
+  onClick,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick?: () => void;
+  href?: string;
+}) {
+  const cls = "h-14 rounded-xl flex flex-col items-center justify-center gap-0.5 bg-[#0A0E27] border border-white/10 text-white";
+  if (href) {
+    return (
+      <a href={href} className={cls}>
+        {icon}
+        <span className="text-[10px]">{label}</span>
+      </a>
+    );
+  }
   return (
-    <button className="h-14 rounded-xl flex flex-col items-center justify-center gap-0.5 bg-[#0A0E27] border border-white/10 text-white">
+    <button onClick={onClick} className={cls}>
       {icon}
       <span className="text-[10px]">{label}</span>
     </button>

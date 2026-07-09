@@ -1,5 +1,6 @@
 import { Shield, ShieldCheck } from "lucide-react";
 import { useApp } from "@/contexts/AppProvider";
+import { toast } from "sonner";
 
 export function SecurityModeToggle({ compact = false }: { compact?: boolean }) {
   const { securityModeEnabled, toggleSecurityMode } = useApp();
@@ -7,7 +8,17 @@ export function SecurityModeToggle({ compact = false }: { compact?: boolean }) {
   return (
     <button
       id="security-toggle"
-      onClick={() => toggleSecurityMode(!securityModeEnabled)}
+      onClick={() => {
+        const next = !securityModeEnabled;
+        toggleSecurityMode(next);
+        if (next) {
+          toast.success("Mode Sécurité IA activé", {
+            description: "L'enregistrement démarrera au début de la course.",
+          });
+        } else {
+          toast("Mode Sécurité IA désactivé");
+        }
+      }}
       className={`flex items-center gap-3 rounded-2xl border transition text-left w-full ${
         securityModeEnabled
           ? "bg-emerald-500/10 border-emerald-500/40"

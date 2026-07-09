@@ -1,20 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { SecurityModeToggle } from "@/components/SecurityMode";
-import { MapBg } from "@/components/MapBg";
+import { CourseInProgressBanner } from "@/components/CourseBanner";
 import { useApp } from "@/contexts/AppProvider";
-import {
-  Bell,
-  MapPin,
-  Navigation,
-  Plane,
-  Store,
-  Building2,
-  ArrowRight,
-  CreditCard,
-  Settings,
-  Shield,
-} from "lucide-react";
+import { Bell, MapPin, Navigation, Plane, Store, Building2, ArrowRight, Gift, Hop as HomeIcon, Briefcase, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/home")({
   component: Home,
@@ -28,7 +17,7 @@ const suggestions = [
 
 function Home() {
   const navigate = useNavigate();
-  const { user, setPendingOrder } = useApp();
+  const { user, setPendingOrder, unreadNotifications, loyalty, loyaltyTier } = useApp();
   const initials = user
     ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
     : "AK";
@@ -42,15 +31,11 @@ function Home() {
     navigate({ to: "/order" });
   }
 
+  const tierLabel = { bronze: "Bronze", argent: "Argent", or: "Or", platinum: "Platinum" }[loyaltyTier];
+
   return (
     <AppShell>
       <div className="relative">
-        {/* <div className="h-44 relative overflow-hidden">
-          <MapBg showGps gpsLabel="Position GPS actuelle" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0E27]" />
-        </div> */}
-
-        {/* <div className="px-5 -mt-4 pb-6 space-y-4 relative z-10"> */}
         <div className="px-5 pt-6 pb-6 space-y-4 relative z-10">
           <header className="flex items-center justify-between animate-float-up">
             <div className="flex items-center gap-3">
@@ -66,15 +51,38 @@ function Home() {
                 <h1 className="text-lg font-semibold leading-tight">{displayName}</h1>
               </div>
             </div>
-            <button className="h-10 w-10 rounded-full bg-[#141B3D] border border-white/5 flex items-center justify-center relative">
+            <Link
+              to="/notifications"
+              className="h-10 w-10 rounded-full bg-[#141B3D] border border-white/5 flex items-center justify-center relative"
+            >
               <Bell className="h-4 w-4 text-white" />
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#7B5CFF]" />
-            </button>
+              {unreadNotifications > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full bg-[#7B5CFF] text-white text-[10px] font-bold flex items-center justify-center">
+                  {unreadNotifications}
+                </span>
+              )}
+            </Link>
           </header>
+
+          <CourseInProgressBanner />
 
           <div className="animate-float-up [animation-delay:40ms]">
             <SecurityModeToggle compact />
           </div>
+
+          <Link
+            to="/loyalty"
+            className="block rounded-2xl bg-gradient-to-r from-[#1a2348] to-[#141B3D] border border-[#7B5CFF]/30 p-4 flex items-center gap-3 animate-float-up [animation-delay:50ms] hover:border-[#7B5CFF]/60 transition"
+          >
+            <div className="h-10 w-10 rounded-xl bg-[#7B5CFF]/20 flex items-center justify-center">
+              <Gift className="h-5 w-5 text-[#7B5CFF]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">Fidélité — Palier {tierLabel}</p>
+              <p className="text-xs text-[#B8BED6]">{loyalty.points.toLocaleString("fr-FR")} points</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[#B8BED6]" />
+          </Link>
 
           <section className="rounded-2xl bg-[#141B3D] border border-white/5 p-4 shadow-card animate-float-up [animation-delay:60ms]">
             <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-3">Où allez-vous ?</h2>
@@ -94,6 +102,28 @@ function Home() {
                 <Navigation className="h-4 w-4 text-[#B8BED6]" />
               </button>
             </div>
+
+            {(user?.homeAddress || user?.workAddress) && (
+              <div className="mt-3 flex gap-2">
+                {user?.homeAddress && (
+                  <button
+                    onClick={() => startOrder(user.homeAddress)}
+                    className="flex-1 flex items-center gap-2 px-3 h-10 rounded-xl bg-[#0A0E27] border border-white/5 text-xs text-white hover:border-[#7B5CFF]/40 transition"
+                  >
+                    <HomeIcon className="h-3.5 w-3.5 text-[#7B5CFF]" /> Maison
+                  </button>
+                )}
+                {user?.workAddress && (
+                  <button
+                    onClick={() => startOrder(user.workAddress)}
+                    className="flex-1 flex items-center gap-2 px-3 h-10 rounded-xl bg-[#0A0E27] border border-white/5 text-xs text-white hover:border-[#7B5CFF]/40 transition"
+                  >
+                    <Briefcase className="h-3.5 w-3.5 text-[#7B5CFF]" /> Travail
+                  </button>
+                )}
+              </div>
+            )}
+
             <button
               onClick={() => startOrder()}
               className="mt-4 w-full h-12 rounded-xl bg-gradient-primary text-white font-semibold text-sm shadow-glow flex items-center justify-center gap-2 active:scale-[0.99] transition"
@@ -102,33 +132,12 @@ function Home() {
             </button>
           </section>
 
-          {/* <div className="grid grid-cols-2 gap-2 animate-float-up [animation-delay:100ms]">
-            <QuickLink
-              icon={<CreditCard className="h-4 w-4" />}
-              label="Paiement"
-              onClick={() => navigate({ to: "/settings", search: { tab: "payment" } })}
-            />
-            <QuickLink
-              icon={<Settings className="h-4 w-4" />}
-              label="Paramètres"
-              onClick={() => navigate({ to: "/settings" })}
-            />
-            <QuickLink
-              icon={<Shield className="h-4 w-4" />}
-              label="Sécurité IA"
-              onClick={() => document.getElementById("security-toggle")?.scrollIntoView()}
-            />
-            <QuickLink
-              icon={<MapPin className="h-4 w-4" />}
-              label="Historique"
-              onClick={() => navigate({ to: "/history" })}
-            />
-          </div> */}
-
           <section className="space-y-3 animate-float-up [animation-delay:140ms]">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold">Suggestions</h3>
-              <button className="text-xs text-[#B8BED6]">Voir tout</button>
+              <Link to="/history" className="text-xs text-[#B8BED6] flex items-center gap-1">
+                <Clock className="h-3 w-3" /> Récentes
+              </Link>
             </div>
             <div className="space-y-2">
               {suggestions.map((s) => {
@@ -155,25 +164,5 @@ function Home() {
         </div>
       </div>
     </AppShell>
-  );
-}
-
-function QuickLink({
-  icon,
-  label,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-2 p-3 rounded-xl bg-[#141B3D] border border-white/5 text-sm hover:border-[#7B5CFF]/40 transition"
-    >
-      <span className="text-[#7B5CFF]">{icon}</span>
-      {label}
-    </button>
   );
 }

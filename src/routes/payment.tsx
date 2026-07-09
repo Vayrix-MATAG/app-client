@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { PrimaryButton, ScreenHeader } from "@/components/FormUi";
 import { formatPrice, useApp } from "@/contexts/AppProvider";
+import { toast } from "sonner";
 import { Banknote, Smartphone, Check } from "lucide-react";
 
 export const Route = createFileRoute("/payment")({
@@ -20,7 +20,25 @@ function Payment() {
   const navigate = useNavigate();
   const { currentRide } = useApp();
   const [selected, setSelected] = useState("cash");
+  const [processing, setProcessing] = useState(false);
   const total = currentRide?.order.proposedPrice || currentRide?.order.estimatedPrice || 1500;
+
+  function handleConfirm() {
+    setProcessing(true);
+    setTimeout(() => {
+      setProcessing(false);
+      if (selected !== "cash" && Math.random() < 0.15) {
+        toast.error("Paiement échoué", {
+          description: "Solde insuffisant ou refus opérateur. Réessayez.",
+        });
+        return;
+      }
+      toast.success("Paiement confirmé", {
+        description: `${formatPrice(total)} XAF · ${selected === "cash" ? "Cash" : selected.toUpperCase()}`,
+      });
+      navigate({ to: "/completed", search: { method: selected } });
+    }, 1400);
+  }
 
   return (
     <PhoneFrame>
@@ -77,8 +95,8 @@ function Payment() {
         </div>
 
         <div className="p-5">
-          <PrimaryButton onClick={() => navigate({ to: "/completed", search: { method: selected } })}>
-            Confirmer le paiement
+          <PrimaryButton onClick={handleConfirm} disabled={processing}>
+            {processing ? "Traitement en cours…" : "Confirmer le paiement"}
           </PrimaryButton>
         </div>
       </div>

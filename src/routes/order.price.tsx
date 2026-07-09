@@ -23,8 +23,11 @@ function PricePage() {
   }
 
   function handlePropose() {
+    const min = Math.round(estimated * 0.5);
+    const max = estimated;
+    if (proposed < min || proposed > max) return;
     updatePendingOrder({ proposedPrice: proposed });
-    navigate({ to: "/order/share" });
+    navigate({ to: "/order/negotiation" });
   }
 
   return (
@@ -77,14 +80,21 @@ function PricePage() {
                 </div>
               </div>
               <label className="block">
-                <span className="text-[11px] uppercase tracking-wider text-[#B8BED6]">Votre proposition (XAF)</span>
+                <span className="text-[11px] uppercase tracking-wider text-[#B8BED6]">
+                  Votre proposition (XAF) — entre {formatPrice(Math.round(estimated * 0.5))} et {formatPrice(estimated)}
+                </span>
                 <input
                   type="number"
                   value={proposed}
                   onChange={(e) => setProposed(Number(e.target.value))}
+                  min={Math.round(estimated * 0.5)}
+                  max={estimated}
                   className="mt-1.5 w-full h-12 px-4 rounded-xl bg-[#141B3D] border border-white/5 outline-none text-lg font-bold"
                 />
               </label>
+              <p className="text-[11px] text-[#B8BED6]">
+                Les chauffeurs acceptent plus vite les prix proches de l'estimation.
+              </p>
             </div>
           )}
         </div>

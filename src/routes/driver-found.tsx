@@ -54,7 +54,10 @@ function DriverFound() {
               <p className="text-xs text-[#B8BED6] mt-0.5">{driver.phone}</p>
             </div>
             <div className="flex gap-2">
-              <button className="h-10 w-10 rounded-xl bg-[#0A0E27] border border-white/10 flex items-center justify-center">
+              <button
+                onClick={() => navigate({ to: "/messages" })}
+                className="h-10 w-10 rounded-xl bg-[#0A0E27] border border-white/10 flex items-center justify-center"
+              >
                 <MessageCircle className="h-4 w-4 text-white" />
               </button>
               <a

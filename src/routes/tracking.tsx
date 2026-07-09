@@ -1,19 +1,30 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { MapBg } from "@/components/MapBg";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { useApp } from "@/contexts/AppProvider";
+import { toast } from "sonner";
 import { ArrowLeft, Phone, MessageCircle, X } from "lucide-react";
 
 export const Route = createFileRoute("/tracking")({
   component: Tracking,
 });
 
+const CANCEL_REASONS = [
+  "Le chauffeur est trop loin",
+  "J'ai changé d'avis",
+  "Urgence personnelle",
+  "J'ai trouvé une autre solution",
+  "Autre",
+];
+
 function Tracking() {
   const navigate = useNavigate();
-  const { currentRide, updateCurrentRide, securityModeEnabled } = useApp();
+  const { currentRide, updateCurrentRide, securityModeEnabled, cancelCurrentRide } = useApp();
   const [eta, setEta] = useState((currentRide?.driver.eta || 3) * 60);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [reason, setReason] = useState(CANCEL_REASONS[0]);
   const driver = currentRide?.driver;
   const order = currentRide?.order;
 
@@ -45,11 +56,17 @@ function Tracking() {
 
   if (!driver || !order) return null;
 
+  function confirmCancel() {
+    cancelCurrentRide(reason);
+    setCancelOpen(false);
+    toast.error("Course annulée", { description: reason });
+    navigate({ to: "/home" });
+  }
+
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-screen sm:min-h-[860px]">
         <MapBg withCar showGps />
-        {/* <StatusBar /> */}
 
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between">
           <button
@@ -93,12 +110,12 @@ function Tracking() {
 
           <div className="grid grid-cols-3 gap-2">
             <ActionBtn icon={<Phone className="h-4 w-4" />} label="Appeler" href={`tel:${driver.phone}`} />
-            <ActionBtn icon={<MessageCircle className="h-4 w-4" />} label="Message" />
+            <ActionBtn icon={<MessageCircle className="h-4 w-4" />} label="Message" onClick={() => navigate({ to: "/messages" })} />
             <ActionBtn
               icon={<X className="h-4 w-4" />}
               label="Annuler"
               variant="danger"
-              onClick={() => navigate({ to: "/home" })}
+              onClick={() => setCancelOpen(true)}
             />
           </div>
 
@@ -106,6 +123,41 @@ function Tracking() {
             Le chauffeur arrive — la course démarrera automatiquement
           </p>
         </div>
+
+        <ConfirmModal
+          open={cancelOpen}
+          onClose={() => setCancelOpen(false)}
+          onConfirm={confirmCancel}
+          title="Annuler la course ?"
+          confirmLabel="Confirmer l'annulation"
+          variant="danger"
+        >
+          <p>Indiquez le motif de l'annulation :</p>
+          <div className="space-y-1.5">
+            {CANCEL_REASONS.map((r) => (
+              <label
+                key={r}
+                className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer text-sm transition ${
+                  reason === r
+                    ? "border-red-500/50 bg-red-500/10 text-white"
+                    : "border-white/5 bg-[#0A0E27] text-[#B8BED6]"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="cancel-reason"
+                  checked={reason === r}
+                  onChange={() => setReason(r)}
+                  className="accent-red-500"
+                />
+                {r}
+              </label>
+            ))}
+          </div>
+          <p className="text-xs text-orange-300/80">
+            Des frais d'annulation peuvent s'appliquer si le chauffeur est déjà en route.
+          </p>
+        </ConfirmModal>
       </div>
     </PhoneFrame>
   );

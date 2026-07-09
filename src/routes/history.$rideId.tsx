@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { PrimaryButton, ScreenHeader } from "@/components/FormUi";
+import { PrimaryButton, SecondaryButton, ScreenHeader } from "@/components/FormUi";
 import { formatPrice, vehicleLabel, useApp } from "@/contexts/AppProvider";
-import { Download, MapPin, CreditCard, Star } from "lucide-react";
+import { toast } from "sonner";
+import { Download, MapPin, CreditCard, Star, RefreshCw, Flag, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/history/$rideId")({
   component: RideDetail,
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/history/$rideId")({
 function RideDetail() {
   const navigate = useNavigate();
   const { rideId } = Route.useParams();
-  const { rideHistory } = useApp();
+  const { rideHistory, setPendingOrder } = useApp();
   const ride = rideHistory.find((r) => r.id === rideId);
 
   if (!ride) {
@@ -96,6 +97,38 @@ Note: ${ride.rating || "N/A"}/5`;
             <Download className="h-4 w-4" /> Télécharger le reçu
           </span>
         </PrimaryButton>
+
+        <div className="grid grid-cols-2 gap-2">
+          <SecondaryButton
+            onClick={() => {
+              setPendingOrder({
+                departure: ride.order.departure,
+                destination: ride.order.destination,
+                vehicleType: ride.order.vehicleType,
+              });
+              toast.success("Trajet rechargé", { description: "Vérifiez les détails et commandez." });
+              navigate({ to: "/order/vehicle" });
+            }}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <RefreshCw className="h-4 w-4" /> Re-commander
+            </span>
+          </SecondaryButton>
+          <SecondaryButton
+            onClick={() => toast.info("Signalement envoyé", { description: "Notre équipe vous recontactera." })}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <Flag className="h-4 w-4" /> Signaler
+            </span>
+          </SecondaryButton>
+        </div>
+
+        <a
+          href={`tel:${ride.driver.phone.replace(/\s/g, "")}`}
+          className="w-full h-12 rounded-xl bg-[#141B3D] border border-white/5 text-white font-medium text-sm flex items-center justify-center gap-2 hover:bg-[#1a2348] transition"
+        >
+          <Phone className="h-4 w-4" /> Contacter le chauffeur
+        </a>
       </div>
     </AppShell>
   );

@@ -2,30 +2,50 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { SecurityModeToggle } from "@/components/SecurityMode";
+import { CourseInProgressBanner } from "@/components/CourseBanner";
 import { Field, PrimaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
-import { Hop as Home, Briefcase, Plus, CreditCard, Bell, Shield, LogOut, ChevronRight, Camera, User, Phone } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Hop as Home,
+  Briefcase,
+  Plus,
+  CreditCard,
+  Bell,
+  Shield,
+  LogOut,
+  ChevronRight,
+  Camera,
+  User,
+  Phone,
+  Gift,
+  PhoneCall,
+  Globe,
+} from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   component: Profile,
 });
 
+const TIER_LABEL = { bronze: "Bronze", argent: "Argent", or: "Or", platinum: "Platinum" } as const;
+
 function Profile() {
   const navigate = useNavigate();
-  const { user, updateUser, signOut } = useApp();
+  const { user, updateUser, signOut, loyalty, loyaltyTier } = useApp();
   const fileRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState(false);
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
   const [phone, setPhone] = useState(user?.phone || "");
-  const [emergencyName, setEmergencyName] = useState(user?.emergencyContact?.name || "");
-  const [emergencyPhone, setEmergencyPhone] = useState(user?.emergencyContact?.phone || "");
   const [homeAddress, setHomeAddress] = useState(user?.homeAddress || "");
   const [workAddress, setWorkAddress] = useState(user?.workAddress || "");
 
   function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (file) updateUser({ photo: URL.createObjectURL(file) });
+    if (file) {
+      updateUser({ photo: URL.createObjectURL(file) });
+      toast.success("Photo mise à jour");
+    }
   }
 
   function handleSave() {
@@ -35,10 +55,9 @@ function Profile() {
       phone,
       homeAddress,
       workAddress,
-      emergencyContact:
-        emergencyName && emergencyPhone ? { name: emergencyName, phone: emergencyPhone } : undefined,
     });
     setEditing(false);
+    toast.success("Profil enregistré");
   }
 
   const initials = user ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase() : "AK";
@@ -61,16 +80,21 @@ function Profile() {
             </span>
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
-          <div>
-            <p className="text-lg font-semibold">
+          <div className="flex-1 min-w-0">
+            <p className="text-lg font-semibold truncate">
               {user?.firstName} {user?.lastName}
             </p>
-            <p className="text-xs text-[#B8BED6]">{user?.email || user?.phone}</p>
-            <p className="mt-1 text-[10px] uppercase tracking-widest text-gradient-primary font-bold">
-              Membre Premium
-            </p>
+            <p className="text-xs text-[#B8BED6] truncate">{user?.email || user?.phone}</p>
+            <button
+              onClick={() => navigate({ to: "/loyalty" })}
+              className="mt-1 text-[10px] uppercase tracking-widest text-gradient-primary font-bold flex items-center gap-1"
+            >
+              <Gift className="h-3 w-3" /> Palier {TIER_LABEL[loyaltyTier]} · {loyalty.points.toLocaleString("fr-FR")} pts
+            </button>
           </div>
         </div>
+
+        <CourseInProgressBanner />
 
         <SecurityModeToggle />
 
@@ -85,12 +109,6 @@ function Profile() {
             <Field icon={<Phone className="h-4 w-4" />} label="Téléphone">
               <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-transparent outline-none text-sm" />
             </Field>
-            <Field icon={<User className="h-4 w-4" />} label="Contact urgence">
-              <input value={emergencyName} onChange={(e) => setEmergencyName(e.target.value)} className="w-full bg-transparent outline-none text-sm" placeholder="Nom" />
-            </Field>
-            <Field icon={<Phone className="h-4 w-4" />} label="Tél. urgence">
-              <input value={emergencyPhone} onChange={(e) => setEmergencyPhone(e.target.value)} className="w-full bg-transparent outline-none text-sm" />
-            </Field>
             <Field icon={<Home className="h-4 w-4" />} label="Adresse Maison">
               <input value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} className="w-full bg-transparent outline-none text-sm" />
             </Field>
@@ -98,6 +116,12 @@ function Profile() {
               <input value={workAddress} onChange={(e) => setWorkAddress(e.target.value)} className="w-full bg-transparent outline-none text-sm" />
             </Field>
             <PrimaryButton onClick={handleSave}>Enregistrer</PrimaryButton>
+            <button
+              onClick={() => setEditing(false)}
+              className="w-full text-sm text-[#B8BED6] hover:text-white"
+            >
+              Annuler
+            </button>
           </div>
         ) : (
           <>
@@ -120,12 +144,21 @@ function Profile() {
               </div>
             </section>
 
+            <section className="animate-float-up [animation-delay:120ms]">
+              <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-2">Sécurité</h2>
+              <div className="rounded-2xl bg-[#141B3D] border border-white/5 divide-y divide-white/5">
+                <SettingRow icon={<PhoneCall className="h-4 w-4" />} label="Contacts d'urgence" sub={`${user?.emergencyContacts?.length || 0} contact(s)`} onClick={() => navigate({ to: "/profile/emergency" })} />
+              </div>
+            </section>
+
             <section className="animate-float-up [animation-delay:140ms]">
               <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-2">Compte</h2>
               <div className="rounded-2xl bg-[#141B3D] border border-white/5 divide-y divide-white/5">
-                <SettingRow icon={<CreditCard className="h-4 w-4" />} label="Moyens de paiement" onClick={() => navigate({ to: "/settings" })} />
-                <SettingRow icon={<Bell className="h-4 w-4" />} label="Notifications" onClick={() => navigate({ to: "/settings" })} />
-                <SettingRow icon={<Shield className="h-4 w-4" />} label="Confidentialité" onClick={() => navigate({ to: "/settings" })} />
+                <SettingRow icon={<CreditCard className="h-4 w-4" />} label="Moyens de paiement" sub="Cash, MTN, Orange" onClick={() => navigate({ to: "/payment/methods" })} />
+                <SettingRow icon={<Bell className="h-4 w-4" />} label="Notifications" sub="Préférences" onClick={() => navigate({ to: "/settings/notifications" })} />
+                <SettingRow icon={<Gift className="h-4 w-4" />} label="Fidélité" sub={`${loyalty.points.toLocaleString("fr-FR")} pts`} onClick={() => navigate({ to: "/loyalty" })} />
+                <SettingRow icon={<Globe className="h-4 w-4" />} label="Langue" sub="Français" onClick={() => navigate({ to: "/settings/language" })} />
+                <SettingRow icon={<Shield className="h-4 w-4" />} label="Confidentialité" sub="Permissions" onClick={() => navigate({ to: "/settings/privacy" })} />
               </div>
             </section>
           </>
@@ -134,6 +167,7 @@ function Profile() {
         <button
           onClick={() => {
             signOut();
+            toast.success("Déconnexion réussie");
             navigate({ to: "/auth" });
           }}
           className="w-full h-12 rounded-xl bg-[#141B3D] border border-red-500/30 text-red-300 font-semibold text-sm flex items-center justify-center gap-2"
@@ -161,16 +195,21 @@ function PlaceRow({ icon, label, sub }: { icon: React.ReactNode; label: string; 
 function SettingRow({
   icon,
   label,
+  sub,
   onClick,
 }: {
   icon: React.ReactNode;
   label: string;
+  sub?: string;
   onClick?: () => void;
 }) {
   return (
     <button onClick={onClick} className="w-full flex items-center gap-3 p-4 text-left">
       <span className="text-[#7B5CFF]">{icon}</span>
-      <span className="flex-1 text-sm">{label}</span>
+      <div className="flex-1">
+        <p className="text-sm">{label}</p>
+        {sub && <p className="text-xs text-[#B8BED6]">{sub}</p>}
+      </div>
       <ChevronRight className="h-4 w-4 text-[#B8BED6]" />
     </button>
   );

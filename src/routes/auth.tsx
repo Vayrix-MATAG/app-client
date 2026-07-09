@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { VayrixLogo } from "@/components/VayrixLogo";
 import { Field, PrimaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
+import { toast } from "sonner";
 import { Mail, Lock, Eye, EyeOff, User, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
@@ -14,6 +14,8 @@ export const Route = createFileRoute("/auth")({
 function Auth() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login, startRegistration } = useApp();
 
@@ -27,13 +29,31 @@ function Auth() {
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    login(loginEmail, loginPassword);
-    navigate({ to: "/home" });
+    if (!loginEmail.trim() || !loginPassword.trim()) {
+      setError("Saisissez votre email et votre mot de passe.");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      login(loginEmail, loginPassword);
+      toast.success("Connexion réussie", { description: "Bienvenue sur Vayrix" });
+      navigate({ to: "/home" });
+    }, 900);
   }
 
   function handleRegister(e: React.FormEvent) {
     e.preventDefault();
-    if (!firstName || !lastName || !phone || !password) return;
+    if (!firstName || !lastName || !phone || !password) {
+      setError("Tous les champs marqués sont obligatoires.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      return;
+    }
+    setError(null);
     startRegistration({ firstName, lastName, phone, email: email || undefined, password });
     navigate({ to: "/auth/otp" });
   }
@@ -41,7 +61,6 @@ function Auth() {
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-        {/* <StatusBar /> */}
         <div className="flex-1 px-6 pt-8 pb-8 flex flex-col overflow-y-auto">
           <div className="flex items-center gap-3 animate-float-up">
             <VayrixLogo size={48} />
@@ -66,7 +85,10 @@ function Auth() {
             {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
-                onClick={() => setMode(m)}
+                onClick={() => {
+                  setMode(m);
+                  setError(null);
+                }}
                 className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   mode === m ? "bg-gradient-primary text-white shadow-glow" : "text-[#B8BED6]"
                 }`}
@@ -75,6 +97,12 @@ function Auth() {
               </button>
             ))}
           </div>
+
+          {error && (
+            <p className="mt-4 text-xs text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg p-2 animate-float-up">
+              {error}
+            </p>
+          )}
 
           {mode === "login" ? (
             <form className="mt-6 space-y-3 animate-float-up [animation-delay:120ms]" onSubmit={handleLogin}>
@@ -99,11 +127,16 @@ function Auth() {
                 </button>
               </Field>
               <div className="flex justify-end">
-                <button type="button" className="text-xs text-[#B8BED6] hover:text-white">
+                <Link
+                  to="/auth/forgot"
+                  className="text-xs text-[#B8BED6] hover:text-white"
+                >
                   Mot de passe oublié ?
-                </button>
+                </Link>
               </div>
-              <PrimaryButton type="submit">Se connecter</PrimaryButton>
+              <PrimaryButton type="submit" disabled={loading}>
+                {loading ? "Connexion…" : "Se connecter"}
+              </PrimaryButton>
             </form>
           ) : (
             <form className="mt-6 space-y-3 animate-float-up [animation-delay:120ms]" onSubmit={handleRegister}>
@@ -162,8 +195,12 @@ function Auth() {
 
           <p className="mt-auto pt-6 text-center text-xs text-[#B8BED6]">
             En continuant vous acceptez nos{" "}
-            <Link to="/auth" className="text-white underline-offset-2 hover:underline">
+            <Link to="/legal/terms" className="text-white underline-offset-2 hover:underline">
               Conditions
+            </Link>
+            {" "}et notre{" "}
+            <Link to="/legal/privacy" className="text-white underline-offset-2 hover:underline">
+              Confidentialité
             </Link>
           </p>
         </div>

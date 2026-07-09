@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { MapBg } from "@/components/MapBg";
+import { PrimaryButton, SecondaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
-import { ArrowLeft, Car } from "lucide-react";
+import { toast } from "sonner";
+import { ArrowLeft, Car, CircleAlert as AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/booking")({
   component: Booking,
@@ -14,20 +15,69 @@ function Booking() {
   const navigate = useNavigate();
   const { currentRide, updateCurrentRide } = useApp();
   const order = currentRide?.order;
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => {
+      if (Math.random() < 0.12) {
+        setFailed(true);
+        return;
+      }
       updateCurrentRide({ status: "found" });
       navigate({ to: "/driver-found" });
     }, 2800);
     return () => clearTimeout(t);
   }, [navigate, updateCurrentRide]);
 
+  function retry() {
+    setFailed(false);
+    toast.success("Nouvelle recherche lancée");
+    setTimeout(() => {
+      updateCurrentRide({ status: "found" });
+      navigate({ to: "/driver-found" });
+    }, 2200);
+  }
+
+  if (failed) {
+    return (
+      <PhoneFrame>
+        <div className="relative h-full min-h-screen sm:min-h-[860px]">
+          <MapBg />
+          <div className="absolute top-12 left-4 right-4 flex items-center justify-between">
+            <button
+              onClick={() => navigate({ to: "/home" })}
+              className="h-10 w-10 rounded-full bg-[#141B3D]/90 backdrop-blur border border-white/10 flex items-center justify-center"
+            >
+              <ArrowLeft className="h-4 w-4 text-white" />
+            </button>
+            <div className="w-10" />
+          </div>
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+            <div className="h-16 w-16 rounded-2xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center mb-4">
+              <AlertCircle className="h-8 w-8 text-orange-400" />
+            </div>
+            <p className="text-lg font-semibold">Aucun chauffeur disponible</p>
+            <p className="mt-2 text-sm text-[#B8BED6]">
+              Aucun chauffeur n'a accepté votre course pour le moment. Réessayez ou ajustez votre prix.
+            </p>
+          </div>
+
+          <div className="absolute bottom-6 left-4 right-4 space-y-2">
+            <PrimaryButton onClick={retry}>Réessayer la recherche</PrimaryButton>
+            <SecondaryButton onClick={() => navigate({ to: "/order/price" })}>
+              Ajuster le prix
+            </SecondaryButton>
+          </div>
+        </div>
+      </PhoneFrame>
+    );
+  }
+
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-screen sm:min-h-[860px]">
         <MapBg />
-        {/* <StatusBar /> */}
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between">
           <button
             onClick={() => navigate({ to: "/home" })}
@@ -66,6 +116,15 @@ function Booking() {
               style={{ width: "70%", backgroundSize: "200% 100%" }}
             />
           </div>
+          <button
+            onClick={() => {
+              toast.success("Recherche annulée");
+              navigate({ to: "/home" });
+            }}
+            className="mt-3 w-full text-xs text-[#B8BED6] hover:text-white"
+          >
+            Annuler la recherche
+          </button>
         </div>
       </div>
     </PhoneFrame>

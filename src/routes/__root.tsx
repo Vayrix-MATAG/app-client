@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 
 import { AppProvider } from "@/contexts/AppProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -67,6 +68,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <Outlet />
+        <Toaster position="top-center" theme="dark" richColors closeButton />
       </AppProvider>
     </QueryClientProvider>
   );

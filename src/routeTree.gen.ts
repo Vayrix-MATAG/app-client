@@ -10,12 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrackingRouteImport } from './routes/tracking'
+import { Route as ShareLiveRouteImport } from './routes/share-live'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RideRouteImport } from './routes/ride'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PaymentRouteImport } from './routes/payment'
 import { Route as OrderRouteImport } from './routes/order'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as DriverFoundRouteImport } from './routes/driver-found'
@@ -23,15 +27,30 @@ import { Route as CompletedRouteImport } from './routes/completed'
 import { Route as BookingRouteImport } from './routes/booking'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SettingsPrivacyRouteImport } from './routes/settings.privacy'
+import { Route as SettingsNotificationsRouteImport } from './routes/settings.notifications'
+import { Route as SettingsLanguageRouteImport } from './routes/settings.language'
+import { Route as ProfileEmergencyRouteImport } from './routes/profile.emergency'
+import { Route as PaymentMethodsRouteImport } from './routes/payment.methods'
 import { Route as OrderVehicleRouteImport } from './routes/order.vehicle'
 import { Route as OrderShareRouteImport } from './routes/order.share'
 import { Route as OrderPriceRouteImport } from './routes/order.price'
+import { Route as OrderNegotiationRouteImport } from './routes/order.negotiation'
+import { Route as LegalTermsRouteImport } from './routes/legal.terms'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as HistoryRideIdRouteImport } from './routes/history.$rideId'
+import { Route as AuthResetRouteImport } from './routes/auth.reset'
 import { Route as AuthOtpRouteImport } from './routes/auth.otp'
+import { Route as AuthForgotRouteImport } from './routes/auth.forgot'
 
 const TrackingRoute = TrackingRouteImport.update({
   id: '/tracking',
   path: '/tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareLiveRoute = ShareLiveRouteImport.update({
+  id: '/share-live',
+  path: '/share-live',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -62,6 +81,21 @@ const OrderRoute = OrderRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoyaltyRoute = LoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -99,6 +133,31 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsPrivacyRoute = SettingsPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsLanguageRoute = SettingsLanguageRouteImport.update({
+  id: '/language',
+  path: '/language',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const ProfileEmergencyRoute = ProfileEmergencyRouteImport.update({
+  id: '/emergency',
+  path: '/emergency',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const PaymentMethodsRoute = PaymentMethodsRouteImport.update({
+  id: '/methods',
+  path: '/methods',
+  getParentRoute: () => PaymentRoute,
+} as any)
 const OrderVehicleRoute = OrderVehicleRouteImport.update({
   id: '/vehicle',
   path: '/vehicle',
@@ -114,14 +173,39 @@ const OrderPriceRoute = OrderPriceRouteImport.update({
   path: '/price',
   getParentRoute: () => OrderRoute,
 } as any)
+const OrderNegotiationRoute = OrderNegotiationRouteImport.update({
+  id: '/negotiation',
+  path: '/negotiation',
+  getParentRoute: () => OrderRoute,
+} as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/legal/terms',
+  path: '/legal/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/legal/privacy',
+  path: '/legal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRideIdRoute = HistoryRideIdRouteImport.update({
   id: '/$rideId',
   path: '/$rideId',
   getParentRoute: () => HistoryRoute,
 } as any)
+const AuthResetRoute = AuthResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthOtpRoute = AuthOtpRouteImport.update({
   id: '/otp',
   path: '/otp',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthForgotRoute = AuthForgotRouteImport.update({
+  id: '/forgot',
+  path: '/forgot',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -133,18 +217,32 @@ export interface FileRoutesByFullPath {
   '/driver-found': typeof DriverFoundRoute
   '/history': typeof HistoryRouteWithChildren
   '/home': typeof HomeRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/messages': typeof MessagesRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/order': typeof OrderRouteWithChildren
-  '/payment': typeof PaymentRoute
-  '/profile': typeof ProfileRoute
+  '/payment': typeof PaymentRouteWithChildren
+  '/profile': typeof ProfileRouteWithChildren
   '/ride': typeof RideRoute
-  '/settings': typeof SettingsRoute
+  '/settings': typeof SettingsRouteWithChildren
+  '/share-live': typeof ShareLiveRoute
   '/tracking': typeof TrackingRoute
+  '/auth/forgot': typeof AuthForgotRoute
   '/auth/otp': typeof AuthOtpRoute
+  '/auth/reset': typeof AuthResetRoute
   '/history/$rideId': typeof HistoryRideIdRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
+  '/order/negotiation': typeof OrderNegotiationRoute
   '/order/price': typeof OrderPriceRoute
   '/order/share': typeof OrderShareRoute
   '/order/vehicle': typeof OrderVehicleRoute
+  '/payment/methods': typeof PaymentMethodsRoute
+  '/profile/emergency': typeof ProfileEmergencyRoute
+  '/settings/language': typeof SettingsLanguageRoute
+  '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/privacy': typeof SettingsPrivacyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -154,18 +252,32 @@ export interface FileRoutesByTo {
   '/driver-found': typeof DriverFoundRoute
   '/history': typeof HistoryRouteWithChildren
   '/home': typeof HomeRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/messages': typeof MessagesRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/order': typeof OrderRouteWithChildren
-  '/payment': typeof PaymentRoute
-  '/profile': typeof ProfileRoute
+  '/payment': typeof PaymentRouteWithChildren
+  '/profile': typeof ProfileRouteWithChildren
   '/ride': typeof RideRoute
-  '/settings': typeof SettingsRoute
+  '/settings': typeof SettingsRouteWithChildren
+  '/share-live': typeof ShareLiveRoute
   '/tracking': typeof TrackingRoute
+  '/auth/forgot': typeof AuthForgotRoute
   '/auth/otp': typeof AuthOtpRoute
+  '/auth/reset': typeof AuthResetRoute
   '/history/$rideId': typeof HistoryRideIdRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
+  '/order/negotiation': typeof OrderNegotiationRoute
   '/order/price': typeof OrderPriceRoute
   '/order/share': typeof OrderShareRoute
   '/order/vehicle': typeof OrderVehicleRoute
+  '/payment/methods': typeof PaymentMethodsRoute
+  '/profile/emergency': typeof ProfileEmergencyRoute
+  '/settings/language': typeof SettingsLanguageRoute
+  '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/privacy': typeof SettingsPrivacyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -176,18 +288,32 @@ export interface FileRoutesById {
   '/driver-found': typeof DriverFoundRoute
   '/history': typeof HistoryRouteWithChildren
   '/home': typeof HomeRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/messages': typeof MessagesRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/order': typeof OrderRouteWithChildren
-  '/payment': typeof PaymentRoute
-  '/profile': typeof ProfileRoute
+  '/payment': typeof PaymentRouteWithChildren
+  '/profile': typeof ProfileRouteWithChildren
   '/ride': typeof RideRoute
-  '/settings': typeof SettingsRoute
+  '/settings': typeof SettingsRouteWithChildren
+  '/share-live': typeof ShareLiveRoute
   '/tracking': typeof TrackingRoute
+  '/auth/forgot': typeof AuthForgotRoute
   '/auth/otp': typeof AuthOtpRoute
+  '/auth/reset': typeof AuthResetRoute
   '/history/$rideId': typeof HistoryRideIdRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
+  '/order/negotiation': typeof OrderNegotiationRoute
   '/order/price': typeof OrderPriceRoute
   '/order/share': typeof OrderShareRoute
   '/order/vehicle': typeof OrderVehicleRoute
+  '/payment/methods': typeof PaymentMethodsRoute
+  '/profile/emergency': typeof ProfileEmergencyRoute
+  '/settings/language': typeof SettingsLanguageRoute
+  '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/privacy': typeof SettingsPrivacyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -199,18 +325,32 @@ export interface FileRouteTypes {
     | '/driver-found'
     | '/history'
     | '/home'
+    | '/loyalty'
+    | '/messages'
+    | '/notifications'
     | '/onboarding'
     | '/order'
     | '/payment'
     | '/profile'
     | '/ride'
     | '/settings'
+    | '/share-live'
     | '/tracking'
+    | '/auth/forgot'
     | '/auth/otp'
+    | '/auth/reset'
     | '/history/$rideId'
+    | '/legal/privacy'
+    | '/legal/terms'
+    | '/order/negotiation'
     | '/order/price'
     | '/order/share'
     | '/order/vehicle'
+    | '/payment/methods'
+    | '/profile/emergency'
+    | '/settings/language'
+    | '/settings/notifications'
+    | '/settings/privacy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -220,18 +360,32 @@ export interface FileRouteTypes {
     | '/driver-found'
     | '/history'
     | '/home'
+    | '/loyalty'
+    | '/messages'
+    | '/notifications'
     | '/onboarding'
     | '/order'
     | '/payment'
     | '/profile'
     | '/ride'
     | '/settings'
+    | '/share-live'
     | '/tracking'
+    | '/auth/forgot'
     | '/auth/otp'
+    | '/auth/reset'
     | '/history/$rideId'
+    | '/legal/privacy'
+    | '/legal/terms'
+    | '/order/negotiation'
     | '/order/price'
     | '/order/share'
     | '/order/vehicle'
+    | '/payment/methods'
+    | '/profile/emergency'
+    | '/settings/language'
+    | '/settings/notifications'
+    | '/settings/privacy'
   id:
     | '__root__'
     | '/'
@@ -241,18 +395,32 @@ export interface FileRouteTypes {
     | '/driver-found'
     | '/history'
     | '/home'
+    | '/loyalty'
+    | '/messages'
+    | '/notifications'
     | '/onboarding'
     | '/order'
     | '/payment'
     | '/profile'
     | '/ride'
     | '/settings'
+    | '/share-live'
     | '/tracking'
+    | '/auth/forgot'
     | '/auth/otp'
+    | '/auth/reset'
     | '/history/$rideId'
+    | '/legal/privacy'
+    | '/legal/terms'
+    | '/order/negotiation'
     | '/order/price'
     | '/order/share'
     | '/order/vehicle'
+    | '/payment/methods'
+    | '/profile/emergency'
+    | '/settings/language'
+    | '/settings/notifications'
+    | '/settings/privacy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -263,13 +431,19 @@ export interface RootRouteChildren {
   DriverFoundRoute: typeof DriverFoundRoute
   HistoryRoute: typeof HistoryRouteWithChildren
   HomeRoute: typeof HomeRoute
+  LoyaltyRoute: typeof LoyaltyRoute
+  MessagesRoute: typeof MessagesRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   OrderRoute: typeof OrderRouteWithChildren
-  PaymentRoute: typeof PaymentRoute
-  ProfileRoute: typeof ProfileRoute
+  PaymentRoute: typeof PaymentRouteWithChildren
+  ProfileRoute: typeof ProfileRouteWithChildren
   RideRoute: typeof RideRoute
-  SettingsRoute: typeof SettingsRoute
+  SettingsRoute: typeof SettingsRouteWithChildren
+  ShareLiveRoute: typeof ShareLiveRoute
   TrackingRoute: typeof TrackingRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalTermsRoute: typeof LegalTermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -279,6 +453,13 @@ declare module '@tanstack/react-router' {
       path: '/tracking'
       fullPath: '/tracking'
       preLoaderRoute: typeof TrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share-live': {
+      id: '/share-live'
+      path: '/share-live'
+      fullPath: '/share-live'
+      preLoaderRoute: typeof ShareLiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -321,6 +502,27 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/loyalty': {
+      id: '/loyalty'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof LoyaltyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -372,6 +574,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/privacy': {
+      id: '/settings/privacy'
+      path: '/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof SettingsPrivacyRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/notifications': {
+      id: '/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof SettingsNotificationsRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/language': {
+      id: '/settings/language'
+      path: '/language'
+      fullPath: '/settings/language'
+      preLoaderRoute: typeof SettingsLanguageRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/profile/emergency': {
+      id: '/profile/emergency'
+      path: '/emergency'
+      fullPath: '/profile/emergency'
+      preLoaderRoute: typeof ProfileEmergencyRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/payment/methods': {
+      id: '/payment/methods'
+      path: '/methods'
+      fullPath: '/payment/methods'
+      preLoaderRoute: typeof PaymentMethodsRouteImport
+      parentRoute: typeof PaymentRoute
+    }
     '/order/vehicle': {
       id: '/order/vehicle'
       path: '/vehicle'
@@ -393,12 +630,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderPriceRouteImport
       parentRoute: typeof OrderRoute
     }
+    '/order/negotiation': {
+      id: '/order/negotiation'
+      path: '/negotiation'
+      fullPath: '/order/negotiation'
+      preLoaderRoute: typeof OrderNegotiationRouteImport
+      parentRoute: typeof OrderRoute
+    }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/legal/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history/$rideId': {
       id: '/history/$rideId'
       path: '/$rideId'
       fullPath: '/history/$rideId'
       preLoaderRoute: typeof HistoryRideIdRouteImport
       parentRoute: typeof HistoryRoute
+    }
+    '/auth/reset': {
+      id: '/auth/reset'
+      path: '/reset'
+      fullPath: '/auth/reset'
+      preLoaderRoute: typeof AuthResetRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/auth/otp': {
       id: '/auth/otp'
@@ -407,15 +672,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthOtpRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/auth/forgot': {
+      id: '/auth/forgot'
+      path: '/forgot'
+      fullPath: '/auth/forgot'
+      preLoaderRoute: typeof AuthForgotRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
+  AuthForgotRoute: typeof AuthForgotRoute
   AuthOtpRoute: typeof AuthOtpRoute
+  AuthResetRoute: typeof AuthResetRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthForgotRoute: AuthForgotRoute,
   AuthOtpRoute: AuthOtpRoute,
+  AuthResetRoute: AuthResetRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -432,18 +708,58 @@ const HistoryRouteWithChildren =
   HistoryRoute._addFileChildren(HistoryRouteChildren)
 
 interface OrderRouteChildren {
+  OrderNegotiationRoute: typeof OrderNegotiationRoute
   OrderPriceRoute: typeof OrderPriceRoute
   OrderShareRoute: typeof OrderShareRoute
   OrderVehicleRoute: typeof OrderVehicleRoute
 }
 
 const OrderRouteChildren: OrderRouteChildren = {
+  OrderNegotiationRoute: OrderNegotiationRoute,
   OrderPriceRoute: OrderPriceRoute,
   OrderShareRoute: OrderShareRoute,
   OrderVehicleRoute: OrderVehicleRoute,
 }
 
 const OrderRouteWithChildren = OrderRoute._addFileChildren(OrderRouteChildren)
+
+interface PaymentRouteChildren {
+  PaymentMethodsRoute: typeof PaymentMethodsRoute
+}
+
+const PaymentRouteChildren: PaymentRouteChildren = {
+  PaymentMethodsRoute: PaymentMethodsRoute,
+}
+
+const PaymentRouteWithChildren =
+  PaymentRoute._addFileChildren(PaymentRouteChildren)
+
+interface ProfileRouteChildren {
+  ProfileEmergencyRoute: typeof ProfileEmergencyRoute
+}
+
+const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileEmergencyRoute: ProfileEmergencyRoute,
+}
+
+const ProfileRouteWithChildren =
+  ProfileRoute._addFileChildren(ProfileRouteChildren)
+
+interface SettingsRouteChildren {
+  SettingsLanguageRoute: typeof SettingsLanguageRoute
+  SettingsNotificationsRoute: typeof SettingsNotificationsRoute
+  SettingsPrivacyRoute: typeof SettingsPrivacyRoute
+}
+
+const SettingsRouteChildren: SettingsRouteChildren = {
+  SettingsLanguageRoute: SettingsLanguageRoute,
+  SettingsNotificationsRoute: SettingsNotificationsRoute,
+  SettingsPrivacyRoute: SettingsPrivacyRoute,
+}
+
+const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
+  SettingsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -453,13 +769,19 @@ const rootRouteChildren: RootRouteChildren = {
   DriverFoundRoute: DriverFoundRoute,
   HistoryRoute: HistoryRouteWithChildren,
   HomeRoute: HomeRoute,
+  LoyaltyRoute: LoyaltyRoute,
+  MessagesRoute: MessagesRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   OrderRoute: OrderRouteWithChildren,
-  PaymentRoute: PaymentRoute,
-  ProfileRoute: ProfileRoute,
+  PaymentRoute: PaymentRouteWithChildren,
+  ProfileRoute: ProfileRouteWithChildren,
   RideRoute: RideRoute,
-  SettingsRoute: SettingsRoute,
+  SettingsRoute: SettingsRouteWithChildren,
+  ShareLiveRoute: ShareLiveRoute,
   TrackingRoute: TrackingRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalTermsRoute: LegalTermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
