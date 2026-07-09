@@ -20,9 +20,9 @@ const TIER_META: Record<LoyaltyTier, { label: string; icon: typeof Crown; color:
 
 const REWARDS = [
   { id: "r1", label: "10% de réduction", cost: 300, desc: "Sur votre prochaine course" },
-  { id: "r2", label: "Course gratuite (≤1500 XAF)", cost: 500, desc: "Un trajet offert" },
-  { id: "r3", label: "Priorité chauffeur", cost: 800, desc: "Mise en avant pendant 30 jours" },
-  { id: "r4", label: "Bonus Premium gratuit", cost: 1200, desc: "Une course Premium sans supplément" },
+  // { id: "r2", label: "Course gratuite (≤1500 XAF)", cost: 500, desc: "Un trajet offert" },
+  // { id: "r3", label: "Priorité chauffeur", cost: 800, desc: "Mise en avant pendant 30 jours" },
+  // { id: "r4", label: "Bonus Premium gratuit", cost: 1200, desc: "Une course Premium sans supplément" },
 ];
 
 function LoyaltyPage() {
