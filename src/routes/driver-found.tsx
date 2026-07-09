@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StatusBar } from "@/components/StatusBar";
 import { MapBg } from "@/components/MapBg";
 import { useApp } from "@/contexts/AppProvider";
+import { resolveLocationCoordinates } from "@/lib/location";
 import { ArrowLeft, Star, Phone, MessageCircle } from "lucide-react";
 
 export const Route = createFileRoute("/driver-found")({
@@ -13,6 +13,8 @@ function DriverFound() {
   const navigate = useNavigate();
   const { currentRide } = useApp();
   const driver = currentRide?.driver;
+  const pickupCoords = resolveLocationCoordinates(currentRide?.order.departure || "", undefined);
+  const driverOrigin = driver?.latitude && driver?.longitude ? { latitude: driver.latitude, longitude: driver.longitude } : undefined;
 
   if (!driver) {
     return null;
@@ -21,7 +23,7 @@ function DriverFound() {
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-0">
-        <MapBg withCar />
+        <MapBg withCar origin={driverOrigin} destination={pickupCoords ?? undefined} />
         {/* <StatusBar /> */}
 
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between">

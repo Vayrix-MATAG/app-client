@@ -1,3 +1,4 @@
+import { resolveLocationCoordinates } from "./location";
 import type {
   AppNotification,
   AppState,
@@ -27,6 +28,9 @@ const DEFAULT_DRIVER: Driver = {
   vehicle: "Toyota Yaris",
   plate: "LT 782 DJ",
   eta: 3,
+  latitude: 3.8521,
+  longitude: 11.5039,
+  photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=60",
 };
 
 const VEHICLE_MULTIPLIERS: Record<VehicleType, number> = {
@@ -219,13 +223,30 @@ export function estimateRide(
 }
 
 export function createRideFromOrder(order: RideOrder, securityMode: boolean): Ride {
+  const originCoords =
+    resolveLocationCoordinates(order.departure, { latitude: 3.84803, longitude: 11.5024 }) ??
+    ({ latitude: 3.84803, longitude: 11.5024 });
+  const destinationCoords =
+    resolveLocationCoordinates(order.destination, { latitude: 3.87376, longitude: 11.5138 }) ??
+    ({ latitude: 3.87376, longitude: 11.5138 });
+  const driverLocation = {
+    latitude: originCoords.latitude + 0.0045,
+    longitude: originCoords.longitude - 0.0035,
+  };
+
   return {
     id: `ride-${Date.now()}`,
     order,
-    driver: DEFAULT_DRIVER,
+    driver: {
+      ...DEFAULT_DRIVER,
+      latitude: driverLocation.latitude,
+      longitude: driverLocation.longitude,
+      eta: 4 + Math.round(Math.random() * 3),
+    },
     status: "searching",
     securityRecording: false,
-    ...(securityMode ? {} : {}),
+    driverLocation,
+    clientLocation: originCoords,
   };
 }
 

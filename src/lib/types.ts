@@ -133,6 +133,9 @@ export interface Driver {
   vehicle: string;
   plate: string;
   eta: number;
+  latitude?: number;
+  longitude?: number;
+  photo?: string;
 }
 
 export interface Ride {
@@ -141,6 +144,8 @@ export interface Ride {
   driver: Driver;
   status: RideStatus;
   securityRecording: boolean;
+  driverLocation?: { latitude: number; longitude: number };
+  clientLocation?: { latitude: number; longitude: number };
   startedAt?: string;
   endedAt?: string;
   paymentMethod?: string;

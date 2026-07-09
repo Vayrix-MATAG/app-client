@@ -4,6 +4,7 @@ import { PhoneFrame } from "@/components/PhoneFrame";
 import { MapBg } from "@/components/MapBg";
 import { SecurityRecordingBadge } from "@/components/SecurityMode";
 import { useApp } from "@/contexts/AppProvider";
+import { resolveLocationCoordinates } from "@/lib/location";
 import { toast } from "sonner";
 import {
   ArrowLeft,
@@ -98,10 +99,21 @@ function RideActive() {
     return null;
   }
 
+  const origin = currentRide?.driverLocation
+    ? currentRide.driverLocation
+    : resolveLocationCoordinates(order.departure, undefined) ?? undefined;
+  const destinationCoords = resolveLocationCoordinates(order.destination, origin ?? undefined);
+
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-0">
-        <MapBg withCar showGps gpsLabel="GPS renforcé" />
+        <MapBg
+          withCar
+          showGps
+          gpsLabel="GPS renforcé"
+          origin={origin ?? undefined}
+          destination={destinationCoords ?? undefined}
+        />
 
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between gap-2">
           <button
@@ -202,7 +214,7 @@ function RideActive() {
         </div>
 
         {sosOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div className="fixed inset-0 z-100 flex items-center justify-center">
             <div
               className="absolute inset-0 bg-red-950/80 backdrop-blur-sm"
               onClick={() => cancelHold()}

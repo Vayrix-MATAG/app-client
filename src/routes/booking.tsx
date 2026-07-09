@@ -4,6 +4,7 @@ import { PhoneFrame } from "@/components/PhoneFrame";
 import { MapBg } from "@/components/MapBg";
 import { PrimaryButton, SecondaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
+import { resolveLocationCoordinates } from "@/lib/location";
 import { toast } from "sonner";
 import { ArrowLeft, Car, CircleAlert as AlertCircle } from "lucide-react";
 
@@ -13,9 +14,10 @@ export const Route = createFileRoute("/booking")({
 
 function Booking() {
   const navigate = useNavigate();
-  const { currentRide, updateCurrentRide } = useApp();
+  const { currentRide, updateCurrentRide, userLocation } = useApp();
   const order = currentRide?.order;
   const [failed, setFailed] = useState(false);
+  const destinationCoords = resolveLocationCoordinates(order?.destination || "", userLocation ?? undefined);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -77,7 +79,12 @@ function Booking() {
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-0">
-        <MapBg />
+        <MapBg
+          showGps
+          origin={userLocation ?? undefined}
+          destination={destinationCoords ?? undefined}
+          destinationQuery={order?.destination ?? undefined}
+        />
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between">
           <button
             onClick={() => navigate({ to: "/home" })}

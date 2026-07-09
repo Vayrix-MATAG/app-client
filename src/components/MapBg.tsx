@@ -15,9 +15,9 @@ export function MapBg({
 }) {
   const defaultOrigin = origin ?? { latitude: 3.84803, longitude: 11.5024 };
   const searchUrl = destinationQuery
-    ? `https://www.google.com/maps?q=${encodeURIComponent(destinationQuery)}&output=embed`
+    ? `https://www.google.com/maps/dir/${defaultOrigin.latitude},${defaultOrigin.longitude}/${encodeURIComponent(destinationQuery)}/?output=embed`
     : destination
-    ? `https://www.google.com/maps?q=${destination.latitude},${destination.longitude}&output=embed`
+    ? `https://www.google.com/maps/dir/${defaultOrigin.latitude},${defaultOrigin.longitude}/${destination.latitude},${destination.longitude}/?output=embed`
     : `https://www.google.com/maps?q=${defaultOrigin.latitude},${defaultOrigin.longitude}&z=15&output=embed`;
 
   return (
