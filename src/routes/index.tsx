@@ -21,7 +21,7 @@ function Splash() {
     }
   }, [navigate]);
   useEffect(() => {
-    const fallback = setTimeout(goNext, 5500);
+    const fallback = setTimeout(goNext, 3000);
     return () => clearTimeout(fallback);
   }, [goNext]);
   return (

@@ -16,6 +16,7 @@ import type {
 } from "./types";
 
 const STORAGE_KEY = "vayrix_app_state";
+const STATE_VERSION = 3; // increment when AppState shape changes
 
 const DEFAULT_DRIVER: Driver = {
   name: "Eric T.",
@@ -177,7 +178,12 @@ export function loadState(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return createEmptyState();
-    const parsed = JSON.parse(raw) as Partial<AppState>;
+    const parsed = JSON.parse(raw) as Partial<AppState> & { _version?: number };
+    // Wipe stale state when schema version changes
+    if ((parsed._version ?? 0) < STATE_VERSION) {
+      localStorage.removeItem(STORAGE_KEY);
+      return createEmptyState();
+    }
     const base = createEmptyState();
     return {
       ...base,
@@ -192,7 +198,7 @@ export function loadState(): AppState {
 
 export function saveState(state: AppState): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, _version: STATE_VERSION }));
 }
 
 export function estimateRide(
