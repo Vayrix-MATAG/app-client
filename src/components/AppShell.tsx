@@ -24,7 +24,7 @@ export function AppShell({
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px] sm:h-[860px]">
-        {!hideStatus && <StatusBar />}
+        {/* {!hideStatus && <StatusBar />} */}
         <div className="flex-1 overflow-y-auto pb-24">{children}</div>
         {!hideNav && (
           <nav className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-2 bg-gradient-to-t from-[#0A0E27] via-[#0A0E27]/95 to-transparent">

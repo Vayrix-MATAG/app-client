@@ -27,7 +27,7 @@ function OrderPage() {
     <PhoneFrame>
       <div className="relative h-full min-h-screen sm:min-h-[860px] flex flex-col">
         <MapBg showGps />
-        <StatusBar />
+        {/* <StatusBar /> */}
         <div className="relative z-10 flex-1 flex flex-col bg-gradient-to-t from-[#0A0E27] via-[#0A0E27]/95 to-transparent">
           <ScreenHeader title="Commander une course" onBack={() => navigate({ to: "/home" })} />
           <div className="flex-1 px-5 space-y-4">

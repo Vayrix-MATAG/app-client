@@ -30,7 +30,7 @@ function PricePage() {
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-        <StatusBar />
+        {/* <StatusBar /> */}
         <ScreenHeader title="Choix du prix" onBack={() => navigate({ to: "/order/vehicle" })} />
 
         <div className="px-5 flex-1 space-y-5">

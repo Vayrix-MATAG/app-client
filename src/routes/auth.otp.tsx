@@ -24,7 +24,7 @@ function OtpPage() {
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-        <StatusBar />
+        {/* <StatusBar /> */}
         <div className="flex-1 px-6 pt-12 flex flex-col">
           <div className="animate-float-up">
             <h1 className="text-2xl font-bold">Vérification OTP</h1>

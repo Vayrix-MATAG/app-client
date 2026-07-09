@@ -38,7 +38,7 @@ function VehiclePage() {
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-        <StatusBar />
+        {/* <StatusBar /> */}
         <ScreenHeader title="Type de véhicule" subtitle={`${departure} → ${destination}`} onBack={() => navigate({ to: "/order" })} />
 
         <div className="px-5 space-y-4 flex-1">

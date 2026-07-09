@@ -55,7 +55,7 @@ function SharePage() {
     return (
       <PhoneFrame>
         <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-          <StatusBar />
+          {/* <StatusBar /> */}
           <ScreenHeader title="Partage de course" subtitle="Étape optionnelle" onBack={() => navigate({ to: "/order/price" })} />
           <div className="px-5 flex-1 space-y-4">
             <p className="text-sm text-[#B8BED6]">
@@ -105,7 +105,7 @@ function SharePage() {
     return (
       <PhoneFrame>
         <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-          <StatusBar />
+          {/* <StatusBar /> */}
           <div className="flex-1 px-5 flex flex-col justify-center text-center">
             <p className="text-lg font-semibold">Aucune course compatible</p>
             <p className="mt-2 text-sm text-[#B8BED6]">Retour à une course normale</p>
@@ -122,7 +122,7 @@ function SharePage() {
     return (
       <PhoneFrame>
         <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-          <StatusBar />
+          {/* <StatusBar /> */}
           <ScreenHeader title="Course compatible trouvée !" />
           <div className="px-5 flex-1 space-y-4">
             <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/30 p-4 space-y-3">
