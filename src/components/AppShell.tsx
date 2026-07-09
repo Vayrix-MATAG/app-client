@@ -6,7 +6,7 @@ import { Home, Clock, User, MapPin } from "lucide-react";
 
 const tabs = [
   { to: "/home", icon: Home, label: "Accueil" },
-  { to: "/order", icon: MapPin, label: "Commander" },
+  { to: "/order", icon: MapPin, label: "Position" },
   { to: "/history", icon: Clock, label: "Courses" },
   { to: "/profile", icon: User, label: "Profil" },
 ] as const;

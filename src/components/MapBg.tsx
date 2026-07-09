@@ -14,17 +14,17 @@ export function MapBg({
   destinationQuery?: string;
 }) {
   const defaultOrigin = origin ?? { latitude: 3.84803, longitude: 11.5024 };
-  const routeUrl = destinationQuery
-    ? `https://www.google.com/maps/dir/${defaultOrigin.latitude},${defaultOrigin.longitude}/${encodeURIComponent(destinationQuery)}/?output=embed`
+  const searchUrl = destinationQuery
+    ? `https://www.google.com/maps?q=${encodeURIComponent(destinationQuery)}&output=embed`
     : destination
-    ? `https://www.google.com/maps/dir/${defaultOrigin.latitude},${defaultOrigin.longitude}/${destination.latitude},${destination.longitude}/?output=embed`
+    ? `https://www.google.com/maps?q=${destination.latitude},${destination.longitude}&output=embed`
     : `https://www.google.com/maps?q=${defaultOrigin.latitude},${defaultOrigin.longitude}&z=15&output=embed`;
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#0A0E27]">
       <iframe
         title="Carte Vayrix"
-        src={routeUrl}
+        src={searchUrl}
         className="absolute inset-0 w-full h-full border-0"
         allowFullScreen
         loading="lazy"
