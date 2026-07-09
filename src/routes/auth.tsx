@@ -1,31 +1,93 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { VayrixLogo } from "@/components/VayrixLogo";
 import { Field, PrimaryButton } from "@/components/FormUi";
 import { useApp } from "@/contexts/AppProvider";
 import { toast } from "sonner";
-import { Mail, Lock, Eye, EyeOff, User, Phone } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User, Phone, KeyRound, MessageSquare } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   component: Auth,
 });
 
+/* ---------------------------------------------------------------------- */
+/*  SegmentedControl — toggle animé réutilisable, défini localement       */
+/*  (pas de fichier séparé, comme demandé)                                */
+/* ---------------------------------------------------------------------- */
+
+type SegmentOption<T extends string> = {
+  value: T;
+  label: string;
+  icon?: ReactNode;
+};
+
+function SegmentedControl<T extends string>({
+  options,
+  value,
+  onChange,
+  fullWidth = false,
+}: {
+  options: SegmentOption<T>[];
+  value: T;
+  onChange: (v: T) => void;
+  fullWidth?: boolean;
+}) {
+  const activeIndex = options.findIndex((o) => o.value === value);
+
+  return (
+    <div
+      className={`relative p-1 bg-[#141B3D] rounded-xl border border-white/5 ${
+        fullWidth ? "grid w-full" : "inline-grid"
+      }`}
+      style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
+    >
+      <div
+        className="absolute top-1 bottom-1 left-1 rounded-lg bg-gradient-primary shadow-glow transition-transform duration-300 ease-out"
+        style={{
+          width: `calc(${100 / options.length}% - 4px)`,
+          transform: `translateX(calc(${activeIndex} * (100% + 4px)))`,
+        }}
+      />
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          onClick={() => onChange(opt.value)}
+          className={`relative z-10 flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg transition-colors duration-300 ${
+            value === opt.value ? "text-white" : "text-[#B8BED6] hover:text-white"
+          }`}
+        >
+          {opt.icon}
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------------- */
+/*  Page Auth                                                              */
+/* ---------------------------------------------------------------------- */
+
 function Auth() {
   const [mode, setMode] = useState<"login" | "register">("login");
+  const [loginMethod, setLoginMethod] = useState<"password" | "otp">("password");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { login, startRegistration } = useApp();
-
   const [loginEmail, setLoginEmail] = useState("alex@vayrix.com");
   const [loginPassword, setLoginPassword] = useState("password");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [resendIn, setResendIn] = useState(0);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const { login, startRegistration } = useApp();
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -41,6 +103,45 @@ function Auth() {
       toast.success("Connexion réussie", { description: "Bienvenue sur Vayrix" });
       navigate({ to: "/home" });
     }, 900);
+  }
+
+  function handleSendOtp(e: React.FormEvent) {
+    e.preventDefault();
+    if (!loginEmail.trim()) {
+      setError("Saisissez votre email ou votre téléphone.");
+      return;
+    }
+    setError(null);
+    setOtpSent(true);
+    setResendIn(30);
+    setOtpCode("");
+    toast.success("Code envoyé", { description: `Vérifiez votre email ou téléphone (${loginEmail})` });
+  }
+
+  function handleVerifyOtpLogin(e: React.FormEvent) {
+    e.preventDefault();
+    if (!loginEmail.trim()) {
+      setError("Saisissez votre email ou votre téléphone.");
+      return;
+    }
+    if (!otpCode.trim() || otpCode.length < 4) {
+      setError("Saisissez le code OTP complet.");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      login(loginEmail, "");
+      toast.success("Connexion réussie", { description: "Bienvenue sur Vayrix" });
+      navigate({ to: "/home" });
+    }, 900);
+  }
+
+  function handleOtpCountdown() {
+    if (resendIn <= 0) return;
+    const timer = window.setInterval(() => setResendIn((current) => current - 1), 1000);
+    return () => window.clearInterval(timer);
   }
 
   function handleRegister(e: React.FormEvent) {
@@ -81,21 +182,19 @@ function Auth() {
             </p>
           </div>
 
-          <div className="mt-4 inline-flex p-1 bg-[#141B3D] rounded-xl self-start">
-            {(["login", "register"] as const).map((m) => (
-              <button
-                key={m}
-                onClick={() => {
-                  setMode(m);
-                  setError(null);
-                }}
-                className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                  mode === m ? "bg-gradient-primary text-white shadow-glow" : "text-[#B8BED6]"
-                }`}
-              >
-                {m === "login" ? "Connexion" : "Inscription"}
-              </button>
-            ))}
+          <div className="mt-4 animate-float-up [animation-delay:100ms]">
+            <SegmentedControl
+              fullWidth
+              value={mode}
+              onChange={(m) => {
+                setMode(m);
+                setError(null);
+              }}
+              options={[
+                { value: "login", label: "Connexion" },
+                { value: "register", label: "Inscription" },
+              ]}
+            />
           </div>
 
           {error && (
@@ -105,39 +204,101 @@ function Auth() {
           )}
 
           {mode === "login" ? (
-            <form className="mt-6 space-y-3 animate-float-up [animation-delay:120ms]" onSubmit={handleLogin}>
-              <Field icon={<Mail className="h-4 w-4" />} label="Email ou téléphone">
-                <input
-                  type="text"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  className="w-full bg-transparent outline-none text-sm"
-                  placeholder="vous@vayrix.com"
-                />
-              </Field>
-              <Field icon={<Lock className="h-4 w-4" />} label="Mot de passe">
-                <input
-                  type={showPw ? "text" : "password"}
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  className="w-full bg-transparent outline-none text-sm"
-                />
-                <button type="button" onClick={() => setShowPw((s) => !s)} className="text-[#B8BED6]">
-                  {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </Field>
-              <div className="flex justify-end">
-                <Link
-                  to="/auth/forgot"
-                  className="text-xs text-[#B8BED6] hover:text-white"
-                >
-                  Mot de passe oublié ?
-                </Link>
-              </div>
-              <PrimaryButton type="submit" disabled={loading}>
-                {loading ? "Connexion…" : "Se connecter"}
-              </PrimaryButton>
-            </form>
+            <div className="mt-6 animate-float-up [animation-delay:120ms]">
+              <SegmentedControl
+                fullWidth
+                value={loginMethod}
+                onChange={(method) => {
+                  setLoginMethod(method);
+                  setError(null);
+                  setOtpSent(false);
+                }}
+                options={[
+                  { value: "password", label: "Mot de passe", icon: <KeyRound className="h-3.5 w-3.5" /> },
+                  { value: "otp", label: "Code OTP", icon: <MessageSquare className="h-3.5 w-3.5" /> },
+                ]}
+              />
+
+              <form
+                className="mt-6 space-y-3"
+                onSubmit={loginMethod === "password" ? handleLogin : otpSent ? handleVerifyOtpLogin : handleSendOtp}
+              >
+                <Field icon={<Mail className="h-4 w-4" />} label="Email ou téléphone">
+                  <input
+                    type="text"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    className="w-full bg-transparent outline-none text-sm"
+                    placeholder="vous@vayrix.com"
+                  />
+                </Field>
+
+                {loginMethod === "password" ? (
+                  <>
+                    <Field icon={<Lock className="h-4 w-4" />} label="Mot de passe">
+                      <input
+                        type={showPw ? "text" : "password"}
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        className="w-full bg-transparent outline-none text-sm"
+                      />
+                      <button type="button" onClick={() => setShowPw((s) => !s)} className="text-[#B8BED6]">
+                        {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </Field>
+                    <div className="flex justify-end">
+                      <Link
+                        to="/auth/forgot"
+                        className="text-xs text-[#B8BED6] hover:text-white"
+                      >
+                        Mot de passe oublié ?
+                      </Link>
+                    </div>
+                    <PrimaryButton type="submit" disabled={loading}>
+                      {loading ? "Connexion…" : "Se connecter"}
+                    </PrimaryButton>
+                  </>
+                ) : (
+                  <>
+                    <div className="rounded-xl border border-white/10 bg-[#0F1632] p-4 text-sm text-[#B8BED6]">
+                      Entrez votre email ou téléphone, puis envoyez le code OTP. Vous le recevrez par SMS ou email.
+                    </div>
+                    {otpSent && (
+                      <Field icon={<Phone className="h-4 w-4" />} label="Code OTP">
+                        <input
+                          type="text"
+                          value={otpCode}
+                          onChange={(e) => setOtpCode(e.target.value)}
+                          className="w-full bg-transparent outline-none text-sm"
+                          placeholder="123456"
+                        />
+                      </Field>
+                    )}
+                    <PrimaryButton type="submit" disabled={loading || (otpSent && otpCode.length < 4)}>
+                      {loading
+                        ? loginMethod === "password"
+                          ? "Connexion…"
+                          : otpSent
+                          ? "Vérification…"
+                          : "Envoi du code…"
+                        : otpSent
+                        ? "Se connecter avec OTP"
+                        : "Envoyer le code"}
+                    </PrimaryButton>
+                    {otpSent && (
+                      <button
+                        type="button"
+                        onClick={handleSendOtp}
+                        disabled={resendIn > 0}
+                        className="w-full text-sm text-[#B8BED6] hover:text-white disabled:opacity-50"
+                      >
+                        {resendIn > 0 ? `Renvoyer le code (${resendIn}s)` : "Renvoyer le code"}
+                      </button>
+                    )}
+                  </>
+                )}
+              </form>
+            </div>
           ) : (
             <form className="mt-6 space-y-3 animate-float-up [animation-delay:120ms]" onSubmit={handleRegister}>
               <Field icon={<User className="h-4 w-4" />} label="Prénom">
@@ -168,7 +329,7 @@ function Auth() {
                   required
                 />
               </Field>
-              <Field icon={<Mail className="h-4 w-4" />} label="Email" optional>
+              {/* <Field icon={<Mail className="h-4 w-4" />} label="Email" optional>
                 <input
                   type="email"
                   value={email}
@@ -176,7 +337,7 @@ function Auth() {
                   className="w-full bg-transparent outline-none text-sm"
                   placeholder="vous@vayrix.com"
                 />
-              </Field>
+              </Field> */}
               <Field icon={<Lock className="h-4 w-4" />} label="Mot de passe">
                 <input
                   type={showPw ? "text" : "password"}

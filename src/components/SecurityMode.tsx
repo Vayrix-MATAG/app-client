@@ -1,5 +1,6 @@
 import { Shield, ShieldCheck } from "lucide-react";
 import { useApp } from "@/contexts/AppProvider";
+import { requestMicrophonePermission } from "@/lib/permissions";
 import { toast } from "sonner";
 
 export function SecurityModeToggle({ compact = false }: { compact?: boolean }) {
@@ -8,12 +9,24 @@ export function SecurityModeToggle({ compact = false }: { compact?: boolean }) {
   return (
     <button
       id="security-toggle"
-      onClick={() => {
+      onClick={async () => {
         const next = !securityModeEnabled;
+        if (next) {
+          const result = await requestMicrophonePermission();
+          if (!result.supported) {
+            toast.error("Microphone non supporté dans ce navigateur.");
+            return;
+          }
+          if (!result.granted) {
+            toast.error("Autorisation du microphone refusée. Impossible d'activer le mode sécurité.");
+            return;
+          }
+        }
+
         toggleSecurityMode(next);
         if (next) {
           toast.success("Mode Sécurité IA activé", {
-            description: "L'enregistrement démarrera au début de la course.",
+            description: "Le micro est autorisé, l'enregistrement démarrera au début de la course.",
           });
         } else {
           toast("Mode Sécurité IA désactivé");
@@ -51,7 +64,7 @@ export function SecurityModeToggle({ compact = false }: { compact?: boolean }) {
       >
         <span
           className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition ${
-            securityModeEnabled ? "left-[22px]" : "left-0.5"
+            securityModeEnabled ? "left-5.5" : "left-0.5"
           }`}
         />
       </div>

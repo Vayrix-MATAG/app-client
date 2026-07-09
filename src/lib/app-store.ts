@@ -229,8 +229,32 @@ export function createRideFromOrder(order: RideOrder, securityMode: boolean): Ri
 }
 
 export function loginUser(emailOrPhone: string, password: string, state: AppState): AppState {
-  if (!password) return state;
   const existing = state.user;
+  const isExisting = Boolean(existing && (existing.email === emailOrPhone || existing.phone === emailOrPhone));
+
+  if (!password) {
+    if (isExisting && existing) {
+      return { ...state, token: `token-${existing.id}` };
+    }
+
+    const isEmail = emailOrPhone.includes("@");
+    const user: User = {
+      id: `user-${Date.now()}`,
+      firstName: "Alex",
+      lastName: "Kamga",
+      phone: isEmail ? "+237 6 99 00 11 22" : emailOrPhone,
+      email: isEmail ? emailOrPhone : "alex@vayrix.com",
+      onboardingComplete: true,
+      homeAddress: "Essos, Yaoundé",
+      workAddress: "Bastos, Yaoundé",
+      emergencyContact: { name: "Marie K.", phone: "+237 6 88 22 33 44" },
+      emergencyContacts: [
+        { id: "ec1", name: "Marie K.", phone: "+237 6 88 22 33 44" },
+      ],
+    };
+    return { ...state, token: `token-${user.id}`, user };
+  }
+
   if (existing && (existing.email === emailOrPhone || existing.phone === emailOrPhone)) {
     return { ...state, token: `token-${existing.id}` };
   }

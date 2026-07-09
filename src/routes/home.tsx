@@ -3,7 +3,8 @@ import { AppShell } from "@/components/AppShell";
 import { SecurityModeToggle } from "@/components/SecurityMode";
 import { CourseInProgressBanner } from "@/components/CourseBanner";
 import { useApp } from "@/contexts/AppProvider";
-import { Bell, MapPin, Navigation, Plane, Store, Building2, ArrowRight, Gift, Hop as HomeIcon, Briefcase, Clock } from "lucide-react";
+import { VayrixLogo } from "@/components/VayrixLogo";
+import { MapPin, Navigation, Plane, Store, Building2, ArrowRight, Gift, Hop as HomeIcon, Briefcase, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/home")({
   component: Home,
@@ -51,17 +52,9 @@ function Home() {
                 <h1 className="text-lg font-semibold leading-tight">{displayName}</h1>
               </div>
             </div>
-            <Link
-              to="/notifications"
-              className="h-10 w-10 rounded-full bg-[#141B3D] border border-white/5 flex items-center justify-center relative"
-            >
-              <Bell className="h-4 w-4 text-white" />
-              {unreadNotifications > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full bg-[#7B5CFF] text-white text-[10px] font-bold flex items-center justify-center">
-                  {unreadNotifications}
-                </span>
-              )}
-            </Link>
+            <div className="h-10 w-10 rounded-full bg-[#141B3D] border border-white/5 flex items-center justify-center">
+              <VayrixLogo size={24} />
+            </div>
           </header>
 
           <CourseInProgressBanner />
@@ -92,7 +85,7 @@ function Home() {
                 <span className="flex-1 text-sm truncate">{user?.homeAddress || "Essos, Yaoundé"}</span>
                 <MapPin className="h-4 w-4 text-[#B8BED6]" />
               </div>
-              <div className="absolute left-[18px] top-[42px] h-3 w-px bg-white/15" />
+              <div className="absolute left-4.5 top-10.5 h-3 w-px bg-white/15" />
               <button
                 onClick={() => startOrder()}
                 className="w-full flex items-center gap-3 h-12 px-3 rounded-xl bg-[#0A0E27] text-left"

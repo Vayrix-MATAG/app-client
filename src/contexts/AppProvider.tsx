@@ -23,6 +23,7 @@ import {
   setPendingRegistration,
   startNegotiation,
 } from "@/lib/app-store";
+import { requestBrowserNotificationPermission, showBrowserNotification } from "@/lib/permissions";
 import type {
   AppLanguage,
   AppNotification,
@@ -214,6 +215,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
         pushNotification: (n) => {
           persist((s) => addNotification(s, n));
+          void requestBrowserNotificationPermission().then((permission) => {
+            if (permission.granted) {
+              showBrowserNotification(n.title, {
+                body: n.body,
+                tag: n.category,
+              });
+            }
+          });
         },
 
         markNotificationRead: (id) => {

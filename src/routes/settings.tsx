@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { SecurityModeToggle } from "@/components/SecurityMode";
 import { ScreenHeader } from "@/components/FormUi";
-import { Bell, CreditCard, Shield, ChevronRight, Globe, Info, Gift } from "lucide-react";
+import { CreditCard, Shield, ChevronRight, Globe, Info, Gift } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   component: Settings,
@@ -21,7 +21,7 @@ function Settings() {
           <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-2">Compte</h2>
           <div className="rounded-2xl bg-[#141B3D] border border-white/5 divide-y divide-white/5">
             <Row icon={<CreditCard className="h-4 w-4" />} label="Paiement" sub="Cash, MTN, Orange Money" onClick={() => navigate({ to: "/payment/methods" })} />
-            <Row icon={<Bell className="h-4 w-4" />} label="Notifications" sub="Préférences par catégorie" onClick={() => navigate({ to: "/settings/notifications" })} />
+            <Row icon={<VayrixLogo size={18} />} label="Notifications" sub="Préférences par catégorie" onClick={() => navigate({ to: "/settings/notifications" })} />
             <Row icon={<Gift className="h-4 w-4" />} label="Fidélité" sub="Points et récompenses" onClick={() => navigate({ to: "/loyalty" })} />
           </div>
         </section>

@@ -8,12 +8,13 @@ import { useState } from "react";
 import {
   MapPin,
   Mic,
-  Bell,
   Shield,
   Trash2,
   ChevronRight,
   FileText,
 } from "lucide-react";
+import { requestBrowserNotificationPermission, requestMicrophonePermission } from "@/lib/permissions";
+import { VayrixLogo } from "@/components/VayrixLogo";
 
 export const Route = createFileRoute("/settings/privacy")({
   component: PrivacyPage,
@@ -24,10 +25,34 @@ function PrivacyPage() {
   const { signOut } = useApp();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  function openSystemSettings() {
-    toast.info("Ouvrez les réglages système", {
-      description: "Autorisez Vayrix à accéder à la localisation, au micro et aux notifications.",
-    });
+  async function handleNotificationPermission() {
+    const result = await requestBrowserNotificationPermission();
+    if (!result.supported) {
+      toast.error("Les notifications ne sont pas supportées par ce navigateur.");
+      return;
+    }
+    if (result.granted) {
+      toast.success("Notifications activées", {
+        description: "Vous recevrez les alertes dans la barre système du navigateur.",
+      });
+    } else {
+      toast.error("Autorisation des notifications refusée.");
+    }
+  }
+
+  async function handleMicrophonePermission() {
+    const result = await requestMicrophonePermission();
+    if (!result.supported) {
+      toast.error("Microphone non supporté dans ce navigateur.");
+      return;
+    }
+    if (result.granted) {
+      toast.success("Microphone autorisé", {
+        description: "Le mode sécurité pourra enregistrer pendant la course.",
+      });
+    } else {
+      toast.error("Autorisation du microphone refusée.");
+    }
   }
 
   function confirmDelete() {
@@ -44,9 +69,9 @@ function PrivacyPage() {
         <section>
           <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-2">Permissions</h2>
           <div className="rounded-2xl bg-[#141B3D] border border-white/5 divide-y divide-white/5">
-            <PermissionRow icon={<MapPin className="h-4 w-4" />} label="Localisation" desc="Requise pour commander" onClick={openSystemSettings} />
-            <PermissionRow icon={<Mic className="h-4 w-4" />} label="Microphone" desc="Mode Sécurité IA" onClick={openSystemSettings} />
-            <PermissionRow icon={<Bell className="h-4 w-4" />} label="Notifications" desc="Alertes de course" onClick={openSystemSettings} />
+            <PermissionRow icon={<MapPin className="h-4 w-4" />} label="Localisation" desc="Requise pour commander" onClick={() => toast.info("Autorisation de localisation à gérer depuis le navigateur/appareil.")} />
+            <PermissionRow icon={<Mic className="h-4 w-4" />} label="Microphone" desc="Mode Sécurité IA" onClick={handleMicrophonePermission} />
+            <PermissionRow icon={<VayrixLogo size={18} />} label="Notifications" desc="Alertes de course" onClick={handleNotificationPermission} />
           </div>
         </section>
 
