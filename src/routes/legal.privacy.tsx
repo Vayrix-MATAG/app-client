@@ -10,7 +10,7 @@ function PrivacyPage() {
   const navigate = useNavigate();
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <ScreenHeader title="Politique de confidentialité" onBack={() => navigate({ to: "/auth" })} />
         <div className="flex-1 px-5 pb-8 space-y-4 overflow-y-auto text-sm text-[#B8BED6]">
           <section>

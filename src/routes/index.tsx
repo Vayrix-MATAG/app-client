@@ -26,9 +26,9 @@ function Splash() {
   }, [goNext]);
   return (
     <PhoneFrame>
-      <div className="relative h-full min-h-screen sm:min-h-[860px] overflow-hidden bg-[#030210] flex flex-col items-center justify-center">
+      <div className="relative h-full min-h-0 overflow-hidden bg-[#030210] flex flex-col items-center justify-center">
         <video
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-contain object-center scale-[0.95]"
           autoPlay
           muted
           playsInline

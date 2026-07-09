@@ -41,7 +41,7 @@ function MessagesPage() {
   if (!driver) {
     return (
       <PhoneFrame>
-        <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+        <div className="flex flex-col h-full min-h-0">
           <div className="px-5 py-4 flex items-center gap-3">
             <button
               onClick={() => navigate({ to: "/home" })}
@@ -62,7 +62,7 @@ function MessagesPage() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <div className="px-4 py-3 flex items-center gap-3 border-b border-white/5 bg-[#141B3D]">
           <button
             onClick={() => window.history.back()}

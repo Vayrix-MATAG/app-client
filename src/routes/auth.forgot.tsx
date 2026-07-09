@@ -36,7 +36,7 @@ function ForgotPage() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <ScreenHeader title="Mot de passe oublié" onBack={() => navigate({ to: "/auth" })} />
         <div className="flex-1 px-5 space-y-5">
           <p className="text-sm text-[#B8BED6]">

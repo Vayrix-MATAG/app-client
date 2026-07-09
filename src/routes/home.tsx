@@ -47,7 +47,7 @@ function Home() {
                 )}
               </div>
               <div>
-                <p className="text-[11px] text-[#B8BED6] uppercase tracking-wider">Bonjour</p>
+                {/* <p className="text-[11px] text-[#B8BED6] uppercase tracking-wider">Bonjour</p> */}
                 <h1 className="text-lg font-semibold leading-tight">{displayName}</h1>
               </div>
             </div>
@@ -70,7 +70,7 @@ function Home() {
             <SecurityModeToggle compact />
           </div>
 
-          <Link
+          {/* <Link
             to="/loyalty"
             className="block rounded-2xl bg-gradient-to-r from-[#1a2348] to-[#141B3D] border border-[#7B5CFF]/30 p-4 flex items-center gap-3 animate-float-up [animation-delay:50ms] hover:border-[#7B5CFF]/60 transition"
           >
@@ -82,7 +82,7 @@ function Home() {
               <p className="text-xs text-[#B8BED6]">{loyalty.points.toLocaleString("fr-FR")} points</p>
             </div>
             <ArrowRight className="h-4 w-4 text-[#B8BED6]" />
-          </Link>
+          </Link> */}
 
           <section className="rounded-2xl bg-[#141B3D] border border-white/5 p-4 shadow-card animate-float-up [animation-delay:60ms]">
             <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-3">Où allez-vous ?</h2>
@@ -103,7 +103,7 @@ function Home() {
               </button>
             </div>
 
-            {(user?.homeAddress || user?.workAddress) && (
+            {/* {(user?.homeAddress || user?.workAddress) && (
               <div className="mt-3 flex gap-2">
                 {user?.homeAddress && (
                   <button
@@ -122,7 +122,7 @@ function Home() {
                   </button>
                 )}
               </div>
-            )}
+            )} */}
 
             <button
               onClick={() => startOrder()}

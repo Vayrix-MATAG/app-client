@@ -49,7 +49,7 @@ function ResetPage() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <ScreenHeader title="Nouveau mot de passe" onBack={() => navigate({ to: "/auth/forgot" })} />
         <form onSubmit={handleSubmit} className="flex-1 px-5 space-y-5">
           <div>

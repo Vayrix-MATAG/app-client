@@ -85,18 +85,18 @@ function Profile() {
               {user?.firstName} {user?.lastName}
             </p>
             <p className="text-xs text-[#B8BED6] truncate">{user?.email || user?.phone}</p>
-            <button
+            {/* <button
               onClick={() => navigate({ to: "/loyalty" })}
               className="mt-1 text-[10px] uppercase tracking-widest text-gradient-primary font-bold flex items-center gap-1"
             >
               <Gift className="h-3 w-3" /> Palier {TIER_LABEL[loyaltyTier]} · {loyalty.points.toLocaleString("fr-FR")} pts
-            </button>
+            </button> */}
           </div>
         </div>
 
         <CourseInProgressBanner />
 
-        <SecurityModeToggle />
+        {/* <SecurityModeToggle /> */}
 
         {editing ? (
           <div className="space-y-3 animate-float-up">
@@ -155,10 +155,10 @@ function Profile() {
               <h2 className="text-xs uppercase tracking-widest text-[#B8BED6] mb-2">Compte</h2>
               <div className="rounded-2xl bg-[#141B3D] border border-white/5 divide-y divide-white/5">
                 <SettingRow icon={<CreditCard className="h-4 w-4" />} label="Moyens de paiement" sub="Cash, MTN, Orange" onClick={() => navigate({ to: "/payment/methods" })} />
-                <SettingRow icon={<Bell className="h-4 w-4" />} label="Notifications" sub="Préférences" onClick={() => navigate({ to: "/settings/notifications" })} />
+                {/* <SettingRow icon={<Bell className="h-4 w-4" />} label="Notifications" sub="Préférences" onClick={() => navigate({ to: "/settings/notifications" })} /> */}
                 <SettingRow icon={<Gift className="h-4 w-4" />} label="Fidélité" sub={`${loyalty.points.toLocaleString("fr-FR")} pts`} onClick={() => navigate({ to: "/loyalty" })} />
                 <SettingRow icon={<Globe className="h-4 w-4" />} label="Langue" sub="Français" onClick={() => navigate({ to: "/settings/language" })} />
-                <SettingRow icon={<Shield className="h-4 w-4" />} label="Confidentialité" sub="Permissions" onClick={() => navigate({ to: "/settings/privacy" })} />
+                {/* <SettingRow icon={<Shield className="h-4 w-4" />} label="Confidentialité" sub="Permissions" onClick={() => navigate({ to: "/settings/privacy" })} /> */}
               </div>
             </section>
           </>

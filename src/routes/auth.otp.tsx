@@ -49,7 +49,7 @@ function OtpPage() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <ScreenHeader title="Vérification OTP" onBack={() => navigate({ to: "/auth" })} />
         <div className="flex-1 px-6 flex flex-col">
           <div className="animate-float-up">

@@ -55,7 +55,7 @@ function Completed() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <div className="flex-1 px-5 py-6 space-y-6 overflow-y-auto">
           <div className="text-center animate-float-up">
             <div className="mx-auto h-20 w-20 rounded-full bg-gradient-primary flex items-center justify-center shadow-glow animate-pulse-glow">

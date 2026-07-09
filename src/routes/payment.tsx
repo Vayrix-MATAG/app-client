@@ -42,7 +42,7 @@ function Payment() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         {/* <StatusBar /> */}
         <ScreenHeader
           title="Paiement"

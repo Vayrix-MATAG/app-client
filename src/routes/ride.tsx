@@ -100,7 +100,7 @@ function RideActive() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-full min-h-screen sm:min-h-[860px]">
+      <div className="relative h-full min-h-0">
         <MapBg withCar showGps gpsLabel="GPS renforcé" />
 
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between gap-2">

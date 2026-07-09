@@ -44,7 +44,7 @@ function ShareLivePage() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <ScreenHeader title="Partager ma position" onBack={() => navigate({ to: "/ride" })} />
         <div className="flex-1 px-5 pb-8 space-y-5 overflow-y-auto">
           <div className="relative h-40 rounded-2xl overflow-hidden border border-white/5">

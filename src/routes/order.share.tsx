@@ -54,7 +54,7 @@ function SharePage() {
   if (phase === "choice") {
     return (
       <PhoneFrame>
-        <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+        <div className="flex flex-col h-full min-h-0">
           {/* <StatusBar /> */}
           <ScreenHeader title="Partage de course" subtitle="Étape optionnelle" onBack={() => navigate({ to: "/order/price" })} />
           <div className="px-5 flex-1 space-y-4">
@@ -89,7 +89,7 @@ function SharePage() {
   if (phase === "searching") {
     return (
       <PhoneFrame>
-        <div className="flex flex-col h-full min-h-screen sm:min-h-[860px] items-center justify-center px-6">
+        <div className="flex flex-col h-full min-h-0 items-center justify-center px-6">
           <StatusBar />
           <div className="h-16 w-16 rounded-full bg-gradient-primary flex items-center justify-center animate-pulse-glow">
             <Users className="h-7 w-7 text-white" />
@@ -104,7 +104,7 @@ function SharePage() {
   if (phase === "no_match") {
     return (
       <PhoneFrame>
-        <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+        <div className="flex flex-col h-full min-h-0">
           {/* <StatusBar /> */}
           <div className="flex-1 px-5 flex flex-col justify-center text-center">
             <p className="text-lg font-semibold">Aucune course compatible</p>
@@ -121,7 +121,7 @@ function SharePage() {
   if (phase === "match_found" || phase === "confirmed") {
     return (
       <PhoneFrame>
-        <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+        <div className="flex flex-col h-full min-h-0">
           {/* <StatusBar /> */}
           <ScreenHeader title="Course compatible trouvée !" />
           <div className="px-5 flex-1 space-y-4">

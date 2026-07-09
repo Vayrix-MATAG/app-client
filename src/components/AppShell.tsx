@@ -23,7 +23,7 @@ export function AppShell({
   const { pathname } = useLocation();
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px] sm:h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         {/* {!hideStatus && <StatusBar />} */}
         <div className="flex-1 overflow-y-auto pb-24">{children}</div>
         {!hideNav && (

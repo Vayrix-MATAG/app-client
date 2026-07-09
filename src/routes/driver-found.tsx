@@ -20,7 +20,7 @@ function DriverFound() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-full min-h-screen sm:min-h-[860px]">
+      <div className="relative h-full min-h-0">
         <MapBg withCar />
         {/* <StatusBar /> */}
 

@@ -127,7 +127,7 @@ function NegotiationPage() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-full min-h-screen sm:min-h-[860px] flex flex-col">
+      <div className="relative h-full min-h-0 flex flex-col">
         <MapBg showGps />
         <div className="relative z-10 flex-1 flex flex-col bg-gradient-to-t from-[#0A0E27] via-[#0A0E27]/95 to-transparent">
           <ScreenHeader title="Négociation" subtitle={`${pendingOrder?.departure || ""} → ${pendingOrder?.destination || ""}`} onBack={backToPrice} />

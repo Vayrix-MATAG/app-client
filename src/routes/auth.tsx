@@ -60,7 +60,7 @@ function Auth() {
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
+      <div className="flex flex-col h-full min-h-0">
         <div className="flex-1 px-6 pt-8 pb-8 flex flex-col overflow-y-auto">
           <div className="flex items-center gap-3 animate-float-up">
             <VayrixLogo size={48} />
